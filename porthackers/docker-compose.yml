@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  # Ensure that the web service starts after the db service
+
+  db:
+    image: postgres:13  # Use the official PostgreSQL image
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data
+    environment:
+      POSTGRES_DB: your_db_name  # Set the name of the default database
+      POSTGRES_USER: your_db_user  # Set the database user
+      POSTGRES_PASSWORD: your_db_password  # Set the password for the user
+
+volumes:
+  postgres_data:  # Create a named volume to persist PostgreSQL data
