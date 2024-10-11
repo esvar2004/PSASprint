@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-$!dd6cov!7os(o9bjhdp2k@q64$7zc-7bw&4kl$&nx29i!qm0g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0', 'localhost']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'interface'
+    'interface',
+    'psa'
 ]
 
 MIDDLEWARE = [
@@ -77,14 +78,16 @@ WSGI_APPLICATION = 'porthackers.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'your_db_name'),  # Match this with the name in docker-compose.yml
-        'USER': os.environ.get('POSTGRES_USER', 'your_db_user'),  # Match this with the user in docker-compose.yml
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'your_db_password'),  # Match this with the password in docker-compose.yml
-        'HOST': 'db',  # Use the service name defined in docker-compose.yml
-        'PORT': '5432',  # Default PostgreSQL port
+        'ENGINE': 'djongo',
+        'NAME': 'sample',  # Replace with your MongoDB database name
+        'CLIENT': {
+            'host': 'mongodb+srv://tejeswararajani:psa2024@cluster0.hetri.mongodb.net/',
+            'username': 'tejeswararajani',  # Replace with your MongoDB username
+            'password': 'psa2024',  # Replace with your MongoDB password
+        }
     }
 }
+
 
 
 # Password validation

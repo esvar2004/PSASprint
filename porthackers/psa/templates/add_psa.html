@@ -1,0 +1,10 @@
+<form method="POST">
+	{% csrf_token %}
+	<label for="headline">Headline:</label><br />
+	<input type="text" id="headline" name="headline" required /><br /><br />
+
+	<label for="is_completed">Is Completed:</label><br />
+	<input type="checkbox" id="is_completed" name="is_completed" /><br /><br />
+
+	<input type="submit" value="Add PSA" />
+</form>
