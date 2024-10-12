@@ -20,6 +20,14 @@ const containerStyle = {
   height: "100vh",
 };
 
+// Restrict the vertical scrolling by limiting latitude bounds
+const mapBounds = {
+  north: 85,  // Upper boundary
+  south: -85, // Lower boundary
+  west: -240,
+  east: 240,
+};
+
 // List of countries to display as markers on the map
 const countries: Country[] = [
   { name: "China", lat: 35.8617, lng: 104.1954 },
@@ -49,19 +57,25 @@ function MapComponent() {
   });
 
   const mapReference = useRef<google.maps.Map | null>(null);
-
-  // State to manage the currently selected marker for showing InfoWindow
   const [selectedMarker, setSelectedMarker] = useState<MarkerInfo | null>(null);
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]); // Store all markers
 
   // Function to handle closing the InfoWindow
   const handleInfoWindowClose = () => {
-    setSelectedMarker(null);  
+    setSelectedMarker(null);
   };
 
-  // Effect to place the markers on the map once it has loaded
-  useEffect(() => {
-    if (!isLoaded || !mapReference.current) return;
+  // Clear existing markers
+  const clearMarkers = () => {
+    markers.forEach((marker) => marker.setMap(null));
+    setMarkers([]); // Clear the state markers
+  };
 
+  // Function to add markers to the map
+  const addMarkersToMap = () => {
+    const newMarkers: google.maps.Marker[] = [];
+
+    // Create markers for all countries
     countries.forEach((country) => {
       const marker = new google.maps.Marker({
         position: { lat: country.lat, lng: country.lng },
@@ -77,7 +91,18 @@ function MapComponent() {
           country: country.name,
         });
       });
+
+      newMarkers.push(marker);
     });
+
+    setMarkers(newMarkers); // Store the markers in state
+  };
+
+  useEffect(() => {
+    if (!isLoaded || !mapReference.current) return;
+
+    // clearMarkers(); // Clear old markers if any
+    addMarkersToMap(); // Add markers to the map
   }, [isLoaded]);
 
   if (loadError) {
@@ -95,6 +120,14 @@ function MapComponent() {
         mapContainerStyle={containerStyle}
         center={{ lat: 20, lng: 0 }} // Initial center of the map
         zoom={2} // Initial zoom level
+        options={{
+          restriction: {
+            latLngBounds: mapBounds,
+            strictBounds: true, // Restrict the map to stay within bounds
+          },
+          zoomControl: true,
+          scrollwheel: true,
+        }}
         onLoad={(map) => {
           mapReference.current = map; // Save the map reference for later use
         }}
@@ -105,26 +138,72 @@ function MapComponent() {
             position={selectedMarker.position}
             onCloseClick={handleInfoWindowClose}
           >
-            <div>
-              <h3>{selectedMarker.country}</h3>
-              <ul>
+            <div
+              style={{
+                width: "250px",
+                padding: "15px",
+                borderRadius: "10px",
+                backgroundImage: `url('/images/countries/${selectedMarker.country}.jpg')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                color: "#fff",
+                boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
+                textAlign: "center", // Center align all text and elements
+              }}
+            >
+              <h3
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                  padding: "5px",
+                  borderRadius: "5px",
+                  fontWeight: "bold",
+                  marginBottom: "10px",
+                }}
+              >
+                {selectedMarker.country}
+              </h3>
+              <ul style={{ listStyle: "none", padding: 0 }}>
                 <li>
-                  <a href="/predictive" className="text-blue-500 hover:underline">
+                  <a
+                    href="/predictive"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      padding: "10px",
+                      borderRadius: "5px",
+                      display: "block",
+                      color: "#4f83cc",
+                      textDecoration: "none",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                    }}
+                  >
                     Port Maintenance
                   </a>
                 </li>
                 <li>
-                  <a href="/freight" className="text-blue-500 hover:underline">
+                  <a
+                    href="/freight"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      padding: "10px",
+                      borderRadius: "5px",
+                      display: "block",
+                      color: "#4f83cc",
+                      textDecoration: "none",
+                      fontWeight: "bold",
+                    }}
+                  >
                     Freight Data
-                  </a> 
+                  </a>
                 </li>
               </ul>
-            </div>
+            </div> 
           </InfoWindow>
         )}
       </GoogleMap>
     </div>
   );
-}
+}   
 
 export default MapComponent;
+ 
