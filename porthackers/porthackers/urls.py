@@ -20,4 +20,5 @@ from psa.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('psa/', add_psa),
+    path('list_freights/', list_freights, name='list_freights')
 ]

@@ -68,5 +68,17 @@ class freight(models.Model):
     created_at = models.DateTimeField()  # Change to DateTimeField
     updated_at = models.DateTimeField()  # Change to DateTimeField
 
+class logistic(models.Model):
+    provider_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=255)
+    contact_info = models.CharField(max_length=255)
+    eco_certification = models.CharField(max_length=255)
+    sustainability_rating = models.FloatField()
+    average_carbon_emissions = models.FloatField()
+    route_origin = models.CharField(max_length=255)
+    route_destination = models.CharField(max_length=255)
+    created_at = models.DateTimeField()  # Change to DateTimeField
+    updated_at = models.DateTimeField()  # Change to DateTimeField
+
 
 

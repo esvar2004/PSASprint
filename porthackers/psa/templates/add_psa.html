@@ -1,10 +1,115 @@
 <form method="POST">
 	{% csrf_token %}
-	<label for="headline">Headline:</label><br />
-	<input type="text" id="headline" name="headline" required /><br /><br />
 
-	<label for="is_completed">Is Completed:</label><br />
-	<input type="checkbox" id="is_completed" name="is_completed" /><br /><br />
+	<label for="freight_id">Freight ID:</label><br />
+	<input
+		type="number"
+		id="freight_id"
+		name="freight_id"
+		required
+	/><br /><br />
 
-	<input type="submit" value="Add PSA" />
+	<label for="user_id">User ID:</label><br />
+	<input type="number" id="user_id" name="user_id" required /><br /><br />
+
+	<label for="cargo_type">Cargo Type:</label><br />
+	<input type="text" id="cargo_type" name="cargo_type" required /><br /><br />
+
+	<label for="weight">Weight:</label><br />
+	<input
+		type="number"
+		step="0.01"
+		id="weight"
+		name="weight"
+		required
+	/><br /><br />
+
+	<label for="dimensions">Dimensions:</label><br />
+	<input type="text" id="dimensions" name="dimensions" required /><br /><br />
+
+	<label for="origin">Origin:</label><br />
+	<input type="text" id="origin" name="origin" required /><br /><br />
+
+	<label for="destination">Destination:</label><br />
+	<input
+		type="text"
+		id="destination"
+		name="destination"
+		required
+	/><br /><br />
+
+	<label for="pickup_date">Pickup Date:</label><br />
+	<input
+		type="date"
+		id="pickup_date"
+		name="pickup_date"
+		required
+	/><br /><br />
+
+	<label for="delivery_date">Delivery Date:</label><br />
+	<input
+		type="date"
+		id="delivery_date"
+		name="delivery_date"
+		required
+	/><br /><br />
+
+	<label for="estimated_delivery_time">Estimated Delivery Time (hours):</label
+	><br />
+	<input
+		type="number"
+		id="estimated_delivery_time"
+		name="estimated_delivery_time"
+		required
+	/><br /><br />
+
+	<label for="estimated_cost">Estimated Cost:</label><br />
+	<input
+		type="number"
+		step="0.01"
+		id="estimated_cost"
+		name="estimated_cost"
+		required
+	/><br /><br />
+
+	<label for="carbon_emissions">Carbon Emissions:</label><br />
+	<input
+		type="number"
+		step="0.01"
+		id="carbon_emissions"
+		name="carbon_emissions"
+		required
+	/><br /><br />
+
+	<label for="status">Status:</label><br />
+	<select id="status" name="status" required>
+		<option value="trans">In Transit</option>
+		<option value="delivered">Delivered</option>
+		<option value="canceled">Canceled</option></select
+	><br /><br />
+
+	<label for="freight_priority">Freight Priority:</label><br />
+	<select id="freight_priority" name="freight_priority" required>
+		<option value="high">High</option>
+		<option value="medium">Medium</option>
+		<option value="low">Low</option></select
+	><br /><br />
+
+	<label for="created_at">Created At:</label><br />
+	<input
+		type="datetime-local"
+		id="created_at"
+		name="created_at"
+		required
+	/><br /><br />
+
+	<label for="updated_at">Updated At:</label><br />
+	<input
+		type="datetime-local"
+		id="updated_at"
+		name="updated_at"
+		required
+	/><br /><br />
+
+	<input type="submit" value="Add Freight Entry" />
 </form>

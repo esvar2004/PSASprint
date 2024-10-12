@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Freight Entries</title>
+	</head>
+	<body>
+		<h1>List of Freight Entries</h1>
+		<table border="1">
+			<tr>
+				<th>Freight ID</th>
+				<th>User ID</th>
+				<th>Cargo Type</th>
+				<th>Weight</th>
+				<th>Dimensions</th>
+				<th>Origin</th>
+				<th>Destination</th>
+				<th>Pickup Date</th>
+				<th>Delivery Date</th>
+				<th>Estimated Delivery Time</th>
+				<th>Estimated Cost</th>
+				<th>Carbon Emissions</th>
+				<th>Status</th>
+				<th>Freight Priority</th>
+				<th>Created At</th>
+				<th>Updated At</th>
+			</tr>
+			{% for freight in freight_entries %}
+			<tr>
+				<td>{{ freight.freight_id }}</td>
+				<td>{{ freight.user_id }}</td>
+				<td>{{ freight.cargo_type }}</td>
+				<td>{{ freight.weight }}</td>
+				<td>{{ freight.dimensions }}</td>
+				<td>{{ freight.origin }}</td>
+				<td>{{ freight.destination }}</td>
+				<td>{{ freight.pickup_date }}</td>
+				<td>{{ freight.delivery_date }}</td>
+				<td>{{ freight.estimated_delivery_time }}</td>
+				<td>{{ freight.estimated_cost }}</td>
+				<td>{{ freight.carbon_emissions }}</td>
+				<td>{{ freight.status }}</td>
+				<td>{{ freight.freight_priority }}</td>
+				<td>{{ freight.created_at }}</td>
+				<td>{{ freight.updated_at }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>
