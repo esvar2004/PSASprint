@@ -55,3 +55,19 @@ def get_freights(request):
             return JsonResponse(data_list, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+def get_freights2(request):
+    if request.method == 'GET':
+        try:
+            origin = request.GET.get('origin')  # Get the 'origin' parameter from the query string
+
+            # Filter freights based on the origin if provided
+            if origin:
+                freight_entries = freight.objects.filter(origin=origin)
+            else:
+                freight_entries = freight.objects.all()
+
+            data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
