@@ -1,8 +1,17 @@
 from django.shortcuts import render, redirect
-from .models import check, freight
-from django.http import HttpResponse
+from .models import check, freight, predictive
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
+def get_predictive(request):
+    if request.method == 'GET':
+        try:
+            predictive_entries = predictive.objects.all()
+            data_list = list(predictive_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
 
 def add_freight(request):
     if request.method == 'POST':
@@ -39,9 +48,10 @@ def add_freight(request):
 
 
 def get_freights(request):
-    # Retrieve all freight entries from the database
-    freight_entries = freight.objects.all()  # Get all entries
-    context = {
-        'freight_entries': freight_entries  # Pass the entries to the template
-    }
-    return render(request, 'list_freights.html', context)
+    if request.method == 'GET':
+        try:
+            freight_entries = freight.objects.all()
+            data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
