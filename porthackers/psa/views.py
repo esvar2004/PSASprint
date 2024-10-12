@@ -2,11 +2,18 @@ from django.shortcuts import render, redirect
 from .models import check, freight, predictive, TopPredictive
 from django.http import HttpResponse, JsonResponse
 
-# Create your views here.
 def get_predictive(request):
     if request.method == 'GET':
+        country = request.GET.get('port_country')
+        print(country)
         try:
-            predictive_entries = TopPredictive.objects.all()
+            if country:
+                # Filter by the specified country
+                predictive_entries = TopPredictive.objects.filter(Port_Country=country)
+            else:
+                # Get all entries if no country specified
+                predictive_entries = TopPredictive.objects.all()
+
             data_list = list(predictive_entries.values())  # Convert queryset to list of dicts
             return JsonResponse(data_list, safe=False)
         except Exception as e:

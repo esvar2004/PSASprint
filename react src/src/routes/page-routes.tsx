@@ -19,7 +19,7 @@ export const PAGE_ROUTES = [
     deactivate: false,
   },
   {
-    id: "another",
+    id: "predictive",
     path: PREDICTIVE_PAGE_ROUTE, // Use the new constant here
     element: <Predictive />, // Reference your new page component
     isPrivate: false, // Set to true if the page should be private

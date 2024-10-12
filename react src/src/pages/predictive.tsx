@@ -1,36 +1,42 @@
-// src/pages/AnotherPage.tsx
 import React, { useState, useEffect } from "react";
+import "../css/predictive.css"; // Ensure the CSS file is imported
 
 interface PredictiveEntry {
-  id: number; // Adjust according to how you're managing IDs
+  id: number;
   Equipment_ID: string;
   Operation_Hours: number;
   Load_Capacity: number;
   Port_Country: string;
   Failures_Last_6_Months: number;
-  Avg_Repair_Time: number; // Assuming this is in some time unit (e.g., hours)
-  Temperature: number; // Assuming this is in degrees Celsius or Fahrenheit
-  Corrosion_Level: "high" | "medium" | "low"; // Based on your choices
-  Wind_Speed: number; // Assuming this is in some unit (e.g., km/h or mph)
-  Last_Maintenance_Date: string; // Use string for date representation (e.g., ISO format)
-  Failure_Probability: number; // Assuming this is a percentage (0-100)
-  Maintenance_Required: boolean; // Indicates if maintenance is required
+  Avg_Repair_Time: number;
+  Temperature: number;
+  Corrosion_Level: "high" | "medium" | "low";
+  Wind_Speed: number;
+  Last_Maintenance_Date: string;
+  Failure_Probability: number;
+  Maintenance_Required: boolean;
 }
 
 const Predictive: React.FC = () => {
   const [predictives, setPredictive] = useState<PredictiveEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
+  const [screenDimensions, setScreenDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
     const fetchPredictive = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/list_predictive/");
+        const response = await fetch(
+          `http://127.0.0.1:8000/list_predictive/?port_country=${"India"}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data);
         setPredictive(data);
       } catch (error_) {
         setError((error_ as Error).message);
@@ -42,28 +48,90 @@ const Predictive: React.FC = () => {
     fetchPredictive();
   }, []);
 
+  const previousCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex > 0 ? previousIndex - 1 : predictives.length - 1
+    );
+  };
+
+  const nextCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex < predictives.length - 1 ? previousIndex + 1 : 0
+    );
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const currentPredictive = predictives[currentIndex];
+
   return (
-    <div>
+    <div className="predictive-container">
       <h1>Predictive Entries</h1>
-      <ul>
-        {predictives.map((predictive) => (
-          <li key={predictive.id}>
-            {predictive.Equipment_ID} - {predictive.Operation_Hours} hours -
-            Capacity: {predictive.Load_Capacity} - Port Country:{" "}
-            {predictive.Port_Country} - Failures Last 6 Months:{" "}
-            {predictive.Failures_Last_6_Months} - Avg Repair Time:{" "}
-            {predictive.Avg_Repair_Time} hours - Temperature:{" "}
-            {predictive.Temperature}°C - Corrosion Level:{" "}
-            {predictive.Corrosion_Level} - Wind Speed: {predictive.Wind_Speed}{" "}
-            km/h - Last Maintenance Date: {predictive.Last_Maintenance_Date} -
-            Failure Probability: {predictive.Failure_Probability}% - Maintenance
-            Required: {predictive.Maintenance_Required ? "Yes" : "No"}
-          </li>
-        ))}
-      </ul>
+      <div className="predictive-cards">
+        <button
+          type="button"
+          onClick={previousCard}
+          disabled={predictives.length <= 1}
+        >
+          Previous
+        </button>
+        <div
+          className="card"
+          key={currentPredictive.id}
+          style={{
+            width: `${screenDimensions.width * 0.1}px`,
+            height: `${screenDimensions.height * 0.4}px`,
+            perspective: "1000px", // For 3D effect
+          }}
+        >
+          <div className="content">
+            <div className="back">
+              <div className="back-content">
+                <h2>Details</h2>
+                <p>
+                  Failures Last 6 Months:{" "}
+                  {currentPredictive.Failures_Last_6_Months}
+                </p>
+                <p>
+                  Average Repair Time: {currentPredictive.Avg_Repair_Time} hours
+                </p>
+                <p>Temperature: {currentPredictive.Temperature}°C</p>
+                <p>Corrosion Level: {currentPredictive.Corrosion_Level}</p>
+                <p>Wind Speed: {currentPredictive.Wind_Speed} km/h</p>
+                <p>
+                  Last Maintenance Date:{" "}
+                  {currentPredictive.Last_Maintenance_Date}
+                </p>
+                <p>
+                  Failure Probability: {currentPredictive.Failure_Probability}%
+                </p>
+                <p>
+                  Maintenance Required:{" "}
+                  {currentPredictive.Maintenance_Required ? "Yes" : "No"}
+                </p>
+              </div>
+            </div>
+            <div className="front">
+              <div className="front-content">
+                <h2>{currentPredictive.Equipment_ID}</h2>
+                <div className="description">
+                  <p>Operation Hours: {currentPredictive.Operation_Hours}</p>
+                  <p>Load Capacity: {currentPredictive.Load_Capacity}</p>
+                  <p>Port Country: {currentPredictive.Port_Country}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={nextCard}
+          disabled={predictives.length <= 1}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
