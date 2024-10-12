@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import psa
+from .models import check
 from django.http import HttpResponse
 
 # Create your views here.
@@ -10,7 +10,7 @@ def add_psa(request):
         is_completed = request.POST.get('is_completed', False)  # default False if not provided
 
         # Create a new psa entry
-        psa_entry = psa.objects.create(
+        psa_entry = check.objects.create(
             headline=headline,
             is_completed=bool(is_completed)
         )

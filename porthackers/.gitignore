@@ -1,4 +1,8 @@
 path/to/venv
-get-pip.py 
+__pycache__
+psa/__pycache__
+get-pip.py
+psa/migrations
+psa/management/data
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #python3 get-pip.py
