@@ -20,5 +20,6 @@ from psa.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('add_freight/', add_freight),
-    path('list_freights/', get_freights, name='list_freights')
+    path('list_freights/', get_freights, name='list_freights'),
+    path('list_predictive/', get_predictive, name = 'list_predictive')
 ]

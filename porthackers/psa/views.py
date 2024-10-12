@@ -1,8 +1,24 @@
 from django.shortcuts import render, redirect
-from .models import check, freight
-from django.http import HttpResponse
+from .models import check, freight, predictive, TopPredictive, TopFreight, TopLogistic
+from django.http import HttpResponse, JsonResponse
 
-# Create your views here.
+def get_predictive(request):
+    if request.method == 'GET':
+        country = request.GET.get('port_country')
+        print(country)
+        try:
+            if country:
+                # Filter by the specified country
+                predictive_entries = TopPredictive.objects.filter(Port_Country=country)
+            else:
+                # Get all entries if no country specified
+                predictive_entries = TopPredictive.objects.all()
+
+            data_list = list(predictive_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
 
 def add_freight(request):
     if request.method == 'POST':
@@ -38,10 +54,27 @@ def add_freight(request):
     return render(request, 'add_psa.html')
 
 
+# def get_freights(request):
+#     if request.method == 'GET':
+#         try:
+#             freight_entries = TopFreight.objects.all()
+#             data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+#             return JsonResponse(data_list, safe=False)
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)
+
 def get_freights(request):
-    # Retrieve all freight entries from the database
-    freight_entries = freight.objects.all()  # Get all entries
-    context = {
-        'freight_entries': freight_entries  # Pass the entries to the template
-    }
-    return render(request, 'list_freights.html', context)
+    if request.method == 'GET':
+        try:
+            origin = request.GET.get('origin')  # Get the 'origin' parameter from the query string
+
+            # Filter freights based on the origin if provided
+            if origin:
+                freight_entries = TopFreight.objects.filter(origin=origin)
+            else:
+                freight_entries = TopFreight.objects.all()
+
+            data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
