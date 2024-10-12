@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useRef, useState } from "react";
 import {
   GoogleMap,
@@ -114,10 +115,10 @@ function MapComponent() {
               {/* Custom InfoWindow Content */}
               <div
                 style={{
-                  width: "300px",
+                  width: "320px",
                   backgroundColor: "#fff",
                   borderRadius: "15px",
-                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.3)",
+                  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
                   overflow: "hidden",
                   fontFamily: "'Roboto', sans-serif",
                 }}
@@ -126,44 +127,56 @@ function MapComponent() {
                 <div
                   style={{
                     width: "100%",
-                    height: "150px",
+                    height: "180px",
                     backgroundImage: `url('images/countries/${selectedMarker.country}.jpg')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    position: "relative",
                   }}
-                />
-                {/* Content Section */}
-                <div style={{ padding: "15px" }}>
-                  <h2
+                >
+                  {/* Country Name Overlay */}
+                  <div
                     style={{
-                      margin: "0 0 10px 0",
+                      position: "absolute",
+                      bottom: "0",
+                      width: "100%",
+                      background: "rgba(0, 0, 0, 0.5)",
+                      color: "#fff",
+                      padding: "10px",
+                      textAlign: "center",
                       fontSize: "1.5em",
-                      color: "#333",
+                      fontWeight: "bold",
                     }}
                   >
                     {selectedMarker.country}
-                  </h2>
+                  </div>
+                </div>
+                {/* Content Section */}
+                <div style={{ padding: "20px", textAlign: "center" }}>
                   <ul
                     style={{ listStyleType: "none", padding: "0", margin: "0" }}
                   >
-                    <li style={{ marginBottom: "10px" }}>
+                    <li style={{ marginBottom: "15px" }}>
                       <a
-                        href="/predictive"
+                        href={`/predictive?port_country=${encodeURIComponent(
+                          selectedMarker.country
+                        )}`}
                         style={{
                           display: "block",
-                          padding: "10px",
-                          backgroundColor: "#3498db",
+                          padding: "12px",
+                          backgroundColor: "#1abc9c",
                           color: "#fff",
                           textDecoration: "none",
                           textAlign: "center",
-                          borderRadius: "5px",
+                          borderRadius: "30px",
                           transition: "background-color 0.3s",
+                          fontSize: "1em",
                         }}
                         onMouseEnter={(event) => {
-                          event.currentTarget.style.backgroundColor = "#2980b9";
+                          event.currentTarget.style.backgroundColor = "#16a085";
                         }}
                         onMouseLeave={(event) => {
-                          event.currentTarget.style.backgroundColor = "#3498db";
+                          event.currentTarget.style.backgroundColor = "#1abc9c";
                         }}
                       >
                         Port Maintenance
@@ -171,22 +184,25 @@ function MapComponent() {
                     </li>
                     <li>
                       <a
-                        href="/freight"
+                        href={`/freight?origin=${encodeURIComponent(
+                          selectedMarker.country
+                        )}`}
                         style={{
                           display: "block",
-                          padding: "10px",
-                          backgroundColor: "#2ecc71",
+                          padding: "12px",
+                          backgroundColor: "#e67e22",
                           color: "#fff",
                           textDecoration: "none",
                           textAlign: "center",
-                          borderRadius: "5px",
+                          borderRadius: "30px",
                           transition: "background-color 0.3s",
+                          fontSize: "1em",
                         }}
                         onMouseEnter={(event) => {
-                          event.currentTarget.style.backgroundColor = "#27ae60";
+                          event.currentTarget.style.backgroundColor = "#d35400";
                         }}
                         onMouseLeave={(event) => {
-                          event.currentTarget.style.backgroundColor = "#2ecc71";
+                          event.currentTarget.style.backgroundColor = "#e67e22";
                         }}
                       >
                         Freight Data
@@ -202,11 +218,18 @@ function MapComponent() {
                     position: "absolute",
                     top: "10px",
                     right: "10px",
-                    backgroundColor: "transparent",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
                     border: "none",
                     fontSize: "1.5em",
                     cursor: "pointer",
                     color: "#fff",
+                    padding: "0",
+                    margin: "0",
+                    lineHeight: "1",
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    outline: "none",
                   }}
                 >
                   &times;
