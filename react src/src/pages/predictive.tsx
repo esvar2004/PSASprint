@@ -29,7 +29,7 @@ const Predictive: React.FC = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [selectedCountry, setSelectedCountry] = useState("Brazil");
+  const [selectedCountry, setSelectedCountry] = useState("India");
 
   useEffect(() => {
     setFlipped(false);
@@ -80,7 +80,7 @@ const Predictive: React.FC = () => {
           fontFamily: "Georgia",
         }}
       >
-        Port Equipment
+        Port Equipment at {selectedCountry}
       </h1>
       <div className="predictive-cards">
         <button
@@ -164,15 +164,15 @@ const Predictive: React.FC = () => {
                   {currentPredictive.Equipment_ID}
                 </h2>
                 <div className="description">
-                  <p style={{ fontFamily: "papyrus" }}>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
                     <b>
                       Operational Hours: {currentPredictive.Operation_Hours}
                     </b>
                   </p>
-                  <p style={{ fontFamily: "papyrus" }}>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
                     <b>Load Capacity: {currentPredictive.Load_Capacity}</b>
                   </p>
-                  <p style={{ fontFamily: "papyrus" }}>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
                     <b>Port Country: {currentPredictive.Port_Country}</b>
                   </p>
                 </div>

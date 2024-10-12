@@ -127,3 +127,20 @@ body {
 .flipped {
     transform: rotateY(180deg); /* Rotate when flipped */
 }
+
+.card-enter {
+  transform: translateX(100%); /* Start off-screen to the right */
+}
+
+.card-enter-active {
+  transform: translateX(0); /* Slide in */
+}
+
+.card-exit {
+  transform: translateX(0); /* Start from the current position */
+}
+
+.card-exit-active {
+  transform: translateX(-100%); /* Slide out to the left */
+}
+
