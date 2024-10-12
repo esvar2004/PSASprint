@@ -72,117 +72,212 @@
 
 // export default Freight;
 
+// import React, { useState, useEffect } from "react";
+// import styled from "styled-components";
+
+// interface FreightEntry {
+//   freight_id: number;
+//   user_id: number;
+//   cargo_type: string;
+//   weight: number;
+//   dimensions: string;
+//   origin: string;
+//   destination: string;
+//   pickup_date: string;
+//   delivery_date: string;
+//   estimated_delivery_time: number;
+//   estimated_cost: number;
+//   carbon_emissions: number;
+//   status: "available" | "in_transit" | "delivered";
+//   freight_priority: "high" | "medium" | "low";
+//   created_at: string;
+//   updated_at: string;
+// }
+
+// const FreightContainer = styled.div`
+//   padding: 20px;
+// `;
+
+// const FreightList = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 20px; /* Space between cards */
+// `;
+
+// const Card = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   position: relative;
+//   width: 220px;
+//   height: 350px;
+//   border-radius: 20px;
+//   overflow: hidden;
+//   box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.1);
+//   background-color: white;
+// `;
+
+// const LandscapeSection = styled.section`
+//   position: relative;
+//   width: 100%;
+//   height: 70%;
+//   overflow: hidden;
+// `;
+
+// const Sky = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   background: linear-gradient(
+//     0deg,
+//     rgba(247, 225, 87, 1) 0%,
+//     rgba(233, 101, 148, 1) 100%
+//   );
+// `;
+
+// const Sun = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 45px;
+//   height: 45px;
+//   border-radius: 50%;
+//   background-color: white;
+//   position: absolute; /* Updated to use absolute positioning */
+//   bottom: 40%;
+//   left: 23%;
+//   filter: drop-shadow(0px 0px 10px white);
+// `;
+
+// const Ocean = styled.div`
+//   position: absolute;
+//   bottom: 0;
+//   width: 100%;
+//   height: 28%;
+//   background: linear-gradient(
+//     0deg,
+//     rgba(241, 192, 125, 1) 0%,
+//     rgba(247, 218, 150, 1) 100%
+//   );
+// `;
+
+// const ContentSection = styled.section`
+//   padding: 10px;
+//   text-align: left;
+//   width: 100%;
+// `;
+
+// const Freight: React.FC = () => {
+//   const [freights, setFreights] = useState<FreightEntry[]>([]);
+//   const [loading, setLoading] = useState<boolean>(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const fetchFreights = async () => {
+//       try {
+//         const response = await fetch(
+//           `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
+//         );
+//         if (!response.ok) {
+//           throw new Error("Network response was not ok");
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//         setFreights(data);
+//       } catch (error_) {
+//         setError((error_ as Error).message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchFreights();
+//   }, []);
+
+//   if (loading) return <div>Loading...</div>;
+//   if (error) return <div>Error: {error}</div>;
+
+//   return (
+//     <FreightContainer>
+//       <h1>Freight Entries</h1>
+//       <FreightList>
+//         {freights.map((freight) => (
+//           <Card key={freight.freight_id}>
+//             <LandscapeSection>
+//               <Sky />
+//               <Sun />
+//               <Ocean />
+//               {/* You can add more visual elements here */}
+//             </LandscapeSection>
+//             <ContentSection>
+//               <h2>{freight.cargo_type}</h2>
+//               <p>Weight: {freight.weight} kg</p>
+//               <p>Dimensions: {freight.dimensions}</p>
+//               <p>Origin: {freight.origin}</p>
+//               <p>Destination: {freight.destination}</p>
+//               <p>Pickup Date: {freight.pickup_date}</p>
+//               <p>Delivery Date: {freight.delivery_date}</p>
+//               <p>
+//                 Estimated Delivery Time: {freight.estimated_delivery_time} hours
+//               </p>
+//               <p>Estimated Cost: ${freight.estimated_cost}</p>
+//               <p>Carbon Emissions: {freight.carbon_emissions} kg</p>
+//               <p>Status: {freight.status}</p>
+//               <p>Priority: {freight.freight_priority}</p>
+//               <p>Created At: {freight.created_at}</p>
+//               <p>Updated At: {freight.updated_at}</p>
+//             </ContentSection>
+//           </Card>
+//         ))}
+//       </FreightList>
+//     </FreightContainer>
+//   );
+// };
+
+// export default Freight;
+
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import "../css/freight.css"; // Ensure the CSS file is imported
 
 interface FreightEntry {
-  freight_id: number;
-  user_id: number;
-  cargo_type: string;
-  weight: number;
-  dimensions: string;
-  origin: string;
-  destination: string;
-  pickup_date: string;
-  delivery_date: string;
-  estimated_delivery_time: number;
-  estimated_cost: number;
-  carbon_emissions: number;
-  status: "available" | "in_transit" | "delivered";
-  freight_priority: "high" | "medium" | "low";
-  created_at: string;
-  updated_at: string;
+  freight_id: number; // Unique identifier for the freight
+  user_id: number; // User ID associated with the freight
+  cargo_type: string; // Type of cargo
+  weight: number; // Weight of the cargo
+  dimensions: string; // Dimensions of the cargo
+  origin: string; // Origin location
+  destination: string; // Destination location
+  pickup_date: string; // Pickup date (use string for ISO format)
+  delivery_date: string; // Delivery date (use string for ISO format)
+  estimated_delivery_time: number; // Estimated delivery time in hours
+  estimated_cost: number; // Estimated cost
+  carbon_emissions: number; // Carbon emissions in kg
+  status: string; // Freight status
+  freight_priority: string; // Freight priority
+  created_at: string; // Creation date (use string for ISO format)
+  updated_at: string; // Update date (use string for ISO format)
 }
 
-const FreightContainer = styled.div`
-  padding: 20px;
-`;
-
-const FreightList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Space between cards */
-`;
-
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  width: 220px;
-  height: 350px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.1);
-  background-color: white;
-`;
-
-const LandscapeSection = styled.section`
-  position: relative;
-  width: 100%;
-  height: 70%;
-  overflow: hidden;
-`;
-
-const Sky = styled.div`
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    0deg,
-    rgba(247, 225, 87, 1) 0%,
-    rgba(233, 101, 148, 1) 100%
-  );
-`;
-
-const Sun = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background-color: white;
-  position: absolute; /* Updated to use absolute positioning */
-  bottom: 40%;
-  left: 23%;
-  filter: drop-shadow(0px 0px 10px white);
-`;
-
-const Ocean = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 28%;
-  background: linear-gradient(
-    0deg,
-    rgba(241, 192, 125, 1) 0%,
-    rgba(247, 218, 150, 1) 100%
-  );
-`;
-
-const ContentSection = styled.section`
-  padding: 10px;
-  text-align: left;
-  width: 100%;
-`;
-
 const Freight: React.FC = () => {
-  const [freights, setFreights] = useState<FreightEntry[]>([]);
+  const [freights, setFreight] = useState<FreightEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
+  const [screenDimensions, setScreenDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
-    const fetchFreights = async () => {
+    const fetchFreight = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
-        );
+          `http://127.0.0.1:8000/list_freights/?origin=India`
+        ); // Adjust the URL as needed
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data);
-        setFreights(data);
+        setFreight(data);
       } catch (error_) {
         setError((error_ as Error).message);
       } finally {
@@ -190,46 +285,171 @@ const Freight: React.FC = () => {
       }
     };
 
-    fetchFreights();
+    fetchFreight();
   }, []);
+
+  const previousCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex > 0 ? previousIndex - 1 : freights.length - 1
+    );
+  };
+
+  const nextCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex < freights.length - 1 ? previousIndex + 1 : 0
+    );
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const currentFreight = freights[currentIndex];
+  console.log(currentFreight);
+
   return (
-    <FreightContainer>
+    <div className="predictive-container">
       <h1>Freight Entries</h1>
-      <FreightList>
-        {freights.map((freight) => (
-          <Card key={freight.freight_id}>
-            <LandscapeSection>
-              <Sky />
-              <Sun />
-              <Ocean />
-              {/* You can add more visual elements here */}
-            </LandscapeSection>
-            <ContentSection>
-              <h2>{freight.cargo_type}</h2>
-              <p>Weight: {freight.weight} kg</p>
-              <p>Dimensions: {freight.dimensions}</p>
-              <p>Origin: {freight.origin}</p>
-              <p>Destination: {freight.destination}</p>
-              <p>Pickup Date: {freight.pickup_date}</p>
-              <p>Delivery Date: {freight.delivery_date}</p>
-              <p>
-                Estimated Delivery Time: {freight.estimated_delivery_time} hours
-              </p>
-              <p>Estimated Cost: ${freight.estimated_cost}</p>
-              <p>Carbon Emissions: {freight.carbon_emissions} kg</p>
-              <p>Status: {freight.status}</p>
-              <p>Priority: {freight.freight_priority}</p>
-              <p>Created At: {freight.created_at}</p>
-              <p>Updated At: {freight.updated_at}</p>
-            </ContentSection>
-          </Card>
-        ))}
-      </FreightList>
-    </FreightContainer>
+      <div className="predictive-cards">
+        <button
+          type="button"
+          onClick={nextCard}
+          disabled={freights.length <= 1}
+        >
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
+            alt="Next"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
+        </button>
+        <div
+          className="card"
+          key={currentFreight.freight_id}
+          style={{
+            width: `${screenDimensions.width * 0.3}px`,
+            height: `${screenDimensions.height * 0.5}px`,
+            perspective: "1000px", // For 3D effect
+          }}
+        >
+          <div className="content">
+            <div className="back">
+              <div className="back-content">
+                <h2 className="details-title">Freight Details</h2>
+                <hr className="divider" />
+                <div className="detail-row">
+                  <span>{currentFreight.cargo_type}</span>
+                  <strong>Cargo Type </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.weight}
+                    <strong>kg</strong>
+                  </span>
+                  <strong>Weight </strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentFreight.dimensions}</span>
+                  <strong>Dimensions </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {new Date(currentFreight.pickup_date).toLocaleDateString()}
+                  </span>
+                  <strong>Pickup Date </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {new Date(
+                      currentFreight.delivery_date
+                    ).toLocaleDateString()}
+                  </span>
+                  <strong>Delivery Date </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.estimated_delivery_time}
+                    <strong>hours</strong>
+                  </span>
+                  <strong>Estimated Delivery Time </strong>
+                </div>
+                <div className="detail-row">
+                  <span>${currentFreight.estimated_cost.toFixed(2)}</span>
+                  <strong>Estimated Cost </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.carbon_emissions}
+                    <strong>kg</strong>
+                  </span>
+                  <strong>Carbon Emissions </strong>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#151515",
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                backfaceVisibility: "hidden",
+                borderRadius: "5px",
+                overflow: "hidden",
+                backgroundImage: `url('/images/countries/${currentFreight.origin}.jpg')`, // Adjust path as needed
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+              }}
+            >
+              <div className="front-content">
+                <h2>{currentFreight.freight_id}</h2>
+                <div className="description">
+                  <p>
+                    <span style={{ color: "red" }}>
+                      {currentFreight.origin}
+                    </span>{" "}
+                    <span style={{ color: "white" }}>to</span>{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.destination}
+                    </span>
+                  </p>
+                  <p>
+                    Status:{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.status}
+                    </span>{" "}
+                    {/* Change color for Status */}
+                  </p>
+                  <p>
+                    Priority:{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.freight_priority}
+                    </span>{" "}
+                    {/* Change color for Priority */}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={previousCard}
+          disabled={freights.length <= 1}
+        >
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
+            alt="Previous"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
+        </button>
+      </div>
+    </div>
   );
 };
 

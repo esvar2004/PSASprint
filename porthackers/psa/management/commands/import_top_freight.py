@@ -12,7 +12,7 @@ class Command(BaseCommand):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         # Build the full path to the CSV file inside the 'data' folder
-        csv_file_path = os.path.join(base_dir, 'data', 'freight_final_data.csv')
+        csv_file_path = os.path.join(base_dir, 'data', 'freight_new_data.csv')
 
         # Open and read the CSV file
         with open(csv_file_path, newline='') as csvfile:

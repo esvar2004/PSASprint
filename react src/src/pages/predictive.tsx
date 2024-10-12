@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../css/predictive.css"; // Ensure the CSS file is imported
 
+// ['USA', 'India', 'Belgium', 'China', 'Saudi Arabia', 'Thailand', 'Italy', 'Poland', 'Canada', 'Singapore', 'Egypt', 'Australia', 'Brazil']
+
 interface PredictiveEntry {
   id: number;
   Equipment_ID: string;
@@ -21,14 +23,16 @@ const Predictive: React.FC = () => {
   const [predictives, setPredictive] = useState<PredictiveEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [flipped, setFlipped] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
   const [screenDimensions, setScreenDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("India");
 
   useEffect(() => {
+    setFlipped(false);
     const fetchPredictive = async () => {
       try {
         const response = await fetch(
@@ -53,12 +57,14 @@ const Predictive: React.FC = () => {
     setCurrentIndex((previousIndex) =>
       previousIndex > 0 ? previousIndex - 1 : predictives.length - 1
     );
+    setFlipped(false);
   };
 
   const nextCard = () => {
     setCurrentIndex((previousIndex) =>
       previousIndex < predictives.length - 1 ? previousIndex + 1 : 0
     );
+    setFlipped(false);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -68,7 +74,14 @@ const Predictive: React.FC = () => {
 
   return (
     <div className="predictive-container">
-      <h1>Predictive Entries</h1>
+      <h1
+        style={{
+          fontSize: screenDimensions.width * 0.02,
+          fontFamily: "Georgia",
+        }}
+      >
+        Port Equipment at {selectedCountry}
+      </h1>
       <div className="predictive-cards">
         <button
           type="button"
@@ -88,21 +101,27 @@ const Predictive: React.FC = () => {
           className="card"
           key={currentPredictive.id}
           style={{
-            width: `${screenDimensions.width * 0.1}px`,
-            height: `${screenDimensions.height * 0.4}px`,
+            width: `${screenDimensions.width * 0.15}px`,
+            height: `${screenDimensions.height * 0.6}px`,
             perspective: "1000px", // For 3D effect
           }}
+          onClick={() => setFlipped((previous) => !previous)}
         >
-          <div className="content">
+          <div className={`content ${flipped ? "flipped" : ""}`}>
             <div className="back">
-              <div className="back-content">
-                <h2>Details</h2>
+              <div
+                className="back-content"
+                style={{ fontSize: screenDimensions.height * 0.15 * 0.11 }}
+              >
+                <h2>
+                  <u>Details</u>
+                </h2>
                 <p>
-                  Failures Last 6 Months:{" "}
+                  Number of Breakdowns Over the Last 6 Months:{" "}
                   {currentPredictive.Failures_Last_6_Months}
                 </p>
                 <p>
-                  Average Repair Time: {currentPredictive.Avg_Repair_Time} hours
+                  Average Repair Time {currentPredictive.Avg_Repair_Time} hours
                 </p>
                 <p>Temperature: {currentPredictive.Temperature}°C</p>
                 <p>Corrosion Level: {currentPredictive.Corrosion_Level}</p>
@@ -116,7 +135,7 @@ const Predictive: React.FC = () => {
                 </p>
                 <p>
                   Maintenance Required:{" "}
-                  {currentPredictive.Maintenance_Required ? "Yes" : "No"}
+                  {currentPredictive.Failure_Probability > 60 ? "Yes" : "No"}
                 </p>
               </div>
             </div>
@@ -129,18 +148,33 @@ const Predictive: React.FC = () => {
                 backfaceVisibility: "hidden", // Use camelCase for CSS properties
                 borderRadius: "5px", // Use camelCase for CSS properties
                 overflow: "hidden",
-                backgroundImage: `url('/images/countries/india.jpg')`, // Adjust path as needed
+                backgroundImage: `url('/images/countries/${selectedCountry}.jpg')`, // Adjust path as needed
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover", // Optional: Add this if you want to cover the entire area
               }}
             >
               <div className="front-content">
-                <h2>{currentPredictive.Equipment_ID}</h2>
+                <h2
+                  style={{
+                    fontSize: screenDimensions.width * 0.02,
+                    fontFamily: "papyrus",
+                  }}
+                >
+                  {currentPredictive.Equipment_ID}
+                </h2>
                 <div className="description">
-                  <p>Operation Hours: {currentPredictive.Operation_Hours}</p>
-                  <p>Load Capacity: {currentPredictive.Load_Capacity}</p>
-                  <p>Port Country: {currentPredictive.Port_Country}</p>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
+                    <b>
+                      Operational Hours: {currentPredictive.Operation_Hours}
+                    </b>
+                  </p>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
+                    <b>Load Capacity: {currentPredictive.Load_Capacity}</b>
+                  </p>
+                  <p style={{ fontFamily: "papyrus", fontSize: 20 }}>
+                    <b>Port Country: {currentPredictive.Port_Country}</b>
+                  </p>
                 </div>
               </div>
             </div>
