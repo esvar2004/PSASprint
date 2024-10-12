@@ -77,8 +77,23 @@ class logistic(models.Model):
     average_carbon_emissions = models.FloatField()
     route_origin = models.CharField(max_length=255)
     route_destination = models.CharField(max_length=255)
-    created_at = models.DateTimeField()  # Change to DateTimeField
-    updated_at = models.DateTimeField()  # Change to DateTimeField
+    created_at = models.DateField() 
+    updated_at = models.DateField()  
 
-
+class TopPredictive(models.Model):
+    Equipment_ID = models.CharField(max_length=255, unique=True)
+    Operation_Hours = models.IntegerField()
+    Load_Capacity = models.IntegerField()
+    Port_Country = models.CharField(max_length=255)
+    Failures_Last_6_Months = models.IntegerField()
+    Avg_Repair_Time = models.FloatField()
+    Temperature = models.FloatField()
+    Corrosion_Level = models.CharField(
+        max_length=6,
+        choices=CHOICES,
+        default='medium',
+    )
+    Wind_Speed = models.FloatField()
+    Last_Maintenance_Date = models.DateField()
+    Failure_Probability = models.FloatField()
 
