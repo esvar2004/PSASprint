@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import check, freight, predictive, TopPredictive
+from .models import check, freight, predictive, TopPredictive, TopFreight, TopLogistic
 from django.http import HttpResponse, JsonResponse
 
 def get_predictive(request):
@@ -57,7 +57,7 @@ def add_freight(request):
 def get_freights(request):
     if request.method == 'GET':
         try:
-            freight_entries = freight.objects.all()
+            freight_entries = TopFreight.objects.all()
             data_list = list(freight_entries.values())  # Convert queryset to list of dicts
             return JsonResponse(data_list, safe=False)
         except Exception as e:
