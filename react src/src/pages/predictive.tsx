@@ -26,6 +26,7 @@ const Predictive: React.FC = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   useEffect(() => {
     const fetchPredictive = async () => {
@@ -71,10 +72,17 @@ const Predictive: React.FC = () => {
       <div className="predictive-cards">
         <button
           type="button"
-          onClick={previousCard}
+          onClick={nextCard}
           disabled={predictives.length <= 1}
         >
-          Previous
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
+            alt="Previous"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
         </button>
         <div
           className="card"
@@ -112,7 +120,21 @@ const Predictive: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="front">
+            <div
+              style={{
+                backgroundColor: "#151515", // Use camelCase for CSS properties
+                position: "absolute", // Use quotes for string values
+                width: "100%",
+                height: "100%",
+                backfaceVisibility: "hidden", // Use camelCase for CSS properties
+                borderRadius: "5px", // Use camelCase for CSS properties
+                overflow: "hidden",
+                backgroundImage: `url('/images/countries/india.jpg')`, // Adjust path as needed
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover", // Optional: Add this if you want to cover the entire area
+              }}
+            >
               <div className="front-content">
                 <h2>{currentPredictive.Equipment_ID}</h2>
                 <div className="description">
@@ -126,10 +148,17 @@ const Predictive: React.FC = () => {
         </div>
         <button
           type="button"
-          onClick={nextCard}
+          onClick={previousCard}
           disabled={predictives.length <= 1}
         >
-          Next
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
+            alt="Previous"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
         </button>
       </div>
     </div>
