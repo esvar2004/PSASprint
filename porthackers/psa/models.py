@@ -46,7 +46,7 @@ class freight(models.Model):
     freight_id = models.IntegerField(unique=True)
     user_id = models.IntegerField()
     cargo_type = models.CharField(max_length=255)
-    weight = models.FloatField()
+    weight = models.FloatField() #sfds
     dimensions = models.CharField(max_length=255)
     origin = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
@@ -54,7 +54,7 @@ class freight(models.Model):
     delivery_date = models.DateTimeField()  # Change to DateTimeField
     estimated_delivery_time = models.IntegerField()
     estimated_cost = models.FloatField()
-    carbon_emissions = models.FloatField()
+    carbon_emissions = models.FloatField() #sfdf
     status = models.CharField( 
         max_length=10,
         choices=STATUS,
@@ -73,10 +73,10 @@ class logistic(models.Model):
     name = models.CharField(max_length=255)
     contact_info = models.CharField(max_length=255)
     eco_certification = models.CharField(max_length=255)
-    sustainability_rating = models.FloatField()
-    average_carbon_emissions = models.FloatField()
-    route_origin = models.CharField(max_length=255)
-    route_destination = models.CharField(max_length=255)
+    sustainability_rating = models.FloatField() #
+    average_carbon_emissions = models.FloatField() #
+    route_origin = models.CharField(max_length=255) #
+    route_destination = models.CharField(max_length=255) #
     created_at = models.DateField() 
     updated_at = models.DateField()  
 

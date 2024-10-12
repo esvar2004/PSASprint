@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import check, freight, predictive
+from .models import check, freight, predictive, TopPredictive
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 def get_predictive(request):
     if request.method == 'GET':
         try:
-            predictive_entries = predictive.objects.all()
+            predictive_entries = TopPredictive.objects.all()
             data_list = list(predictive_entries.values())  # Convert queryset to list of dicts
             return JsonResponse(data_list, safe=False)
         except Exception as e:
