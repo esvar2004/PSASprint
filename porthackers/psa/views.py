@@ -54,25 +54,25 @@ def add_freight(request):
     return render(request, 'add_psa.html')
 
 
-def get_freights(request):
-    if request.method == 'GET':
-        try:
-            freight_entries = TopFreight.objects.all()
-            data_list = list(freight_entries.values())  # Convert queryset to list of dicts
-            return JsonResponse(data_list, safe=False)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+# def get_freights(request):
+#     if request.method == 'GET':
+#         try:
+#             freight_entries = TopFreight.objects.all()
+#             data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+#             return JsonResponse(data_list, safe=False)
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)
 
-def get_freights2(request):
+def get_freights(request):
     if request.method == 'GET':
         try:
             origin = request.GET.get('origin')  # Get the 'origin' parameter from the query string
 
             # Filter freights based on the origin if provided
             if origin:
-                freight_entries = freight.objects.filter(origin=origin)
+                freight_entries = TopFreight.objects.filter(origin=origin)
             else:
-                freight_entries = freight.objects.all()
+                freight_entries = TopFreight.objects.all()
 
             data_list = list(freight_entries.values())  # Convert queryset to list of dicts
             return JsonResponse(data_list, safe=False)

@@ -174,7 +174,9 @@ const Freight: React.FC = () => {
   useEffect(() => {
     const fetchFreights = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/list_freights/");
+        const response = await fetch(
+          `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
