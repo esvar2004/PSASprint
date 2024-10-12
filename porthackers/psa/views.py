@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 # Create your views here.
 
-def add_psa(request):
+def add_freight(request):
     if request.method == 'POST':
         # headline = request.POST.get('headline')
         # is_completed = request.POST.get('is_completed', False)  # default False if not provided
@@ -38,7 +38,7 @@ def add_psa(request):
     return render(request, 'add_psa.html')
 
 
-def list_freights(request):
+def get_freights(request):
     # Retrieve all freight entries from the database
     freight_entries = freight.objects.all()  # Get all entries
     context = {
