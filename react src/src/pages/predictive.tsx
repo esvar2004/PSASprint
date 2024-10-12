@@ -101,7 +101,7 @@ const Predictive: React.FC = () => {
           className="card"
           key={currentPredictive.id}
           style={{
-            width: `${screenDimensions.width * 0.15}px`,
+            width: `${screenDimensions.width * 0.3}px`,
             height: `${screenDimensions.height * 0.6}px`,
             perspective: "1000px", // For 3D effect
           }}

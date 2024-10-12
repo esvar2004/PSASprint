@@ -78,3 +78,12 @@ def get_freights(request):
             return JsonResponse(data_list, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+def get_logistics(request):
+    if request.method == 'GET':
+        try:
+            freight_entries = TopLogistic.objects.all()
+            data_list = list(freight_entries.values())  # Convert queryset to list of dicts
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
