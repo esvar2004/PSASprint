@@ -129,13 +129,16 @@ const Predictive: React.FC = () => {
                 </div>
                 <div className="detail-row">
                   <span>
-                    {currentPredictive.Avg_Repair_Time}
+                    {currentPredictive.Avg_Repair_Time.toFixed(2)}
                     <strong>hrs</strong>
                   </span>
                   <strong>Avg. Repair Time</strong>
                 </div>
                 <div className="detail-row">
-                  <span>{currentPredictive.Temperature}</span>
+                  <span>
+                    {currentPredictive.Temperature.toFixed(2)}
+                    <strong>C</strong>
+                  </span>
                   <strong>Temperature </strong>
                 </div>
                 <div className="detail-row">
@@ -144,7 +147,7 @@ const Predictive: React.FC = () => {
                 </div>
                 <div className="detail-row">
                   <span>
-                    {currentPredictive.Wind_Speed}
+                    {currentPredictive.Wind_Speed.toFixed(2)}
                     <strong>km/hr</strong>
                   </span>
                   <strong>Wind Speed </strong>
@@ -154,7 +157,9 @@ const Predictive: React.FC = () => {
                   <strong>Last Maintenance Date </strong>
                 </div>
                 <div className="detail-row">
-                  <span>{currentPredictive.Failure_Probability}%</span>
+                  <span>
+                    {currentPredictive.Failure_Probability.toFixed(2)}%
+                  </span>
                   <strong>Failure Probability </strong>
                 </div>
                 <div className="detail-row">

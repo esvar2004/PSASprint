@@ -46,6 +46,7 @@ const Freight: React.FC = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   useEffect(() => {
     const fetchFreight = async () => {
@@ -74,6 +75,10 @@ const Freight: React.FC = () => {
   useEffect(() => {
     const queryParameters = new URLSearchParams(window.location.search);
     const country = queryParameters.get("origin");
+
+    if (country) {
+      setSelectedCountry(country);
+    }
 
     const fetchLogistics = async () => {
       try {
@@ -113,7 +118,14 @@ const Freight: React.FC = () => {
 
   return (
     <div className="predictive-container">
-      <h1>Freight Entries</h1>
+      <h1
+        style={{
+          fontSize: screenDimensions.width * 0.02,
+          fontFamily: "Georgia",
+        }}
+      >
+        Freight Entries at {selectedCountry}
+      </h1>
       <div className="predictive-cards">
         <button
           type="button"
