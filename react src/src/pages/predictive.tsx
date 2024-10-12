@@ -32,7 +32,6 @@ const Predictive: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState("India");
 
   useEffect(() => {
-    setFlipped(false);
     const fetchPredictive = async () => {
       try {
         const response = await fetch(
@@ -105,7 +104,7 @@ const Predictive: React.FC = () => {
             height: `${screenDimensions.height * 0.6}px`,
             perspective: "1000px", // For 3D effect
           }}
-          onClick={() => setFlipped((previous) => !previous)}
+          onClick={() => setFlipped(!flipped)}
         >
           <div className={`content ${flipped ? "flipped" : ""}`}>
             <div className="back">
@@ -113,30 +112,48 @@ const Predictive: React.FC = () => {
                 className="back-content"
                 style={{ fontSize: screenDimensions.height * 0.15 * 0.11 }}
               >
-                <h2>
-                  <u>Details</u>
-                </h2>
-                <p>
-                  Number of Breakdowns Over the Last 6 Months:{" "}
-                  {currentPredictive.Failures_Last_6_Months}
-                </p>
-                <p>
-                  Average Repair Time {currentPredictive.Avg_Repair_Time} hours
-                </p>
-                <p>Temperature: {currentPredictive.Temperature}°C</p>
-                <p>Corrosion Level: {currentPredictive.Corrosion_Level}</p>
-                <p>Wind Speed: {currentPredictive.Wind_Speed} km/h</p>
-                <p>
-                  Last Maintenance Date:{" "}
-                  {currentPredictive.Last_Maintenance_Date}
-                </p>
-                <p>
-                  Failure Probability: {currentPredictive.Failure_Probability}%
-                </p>
-                <p>
-                  Maintenance Required:{" "}
-                  {currentPredictive.Failure_Probability > 60 ? "Yes" : "No"}
-                </p>
+                <h2 className="details-title">Port Details</h2>
+                <hr className="divider" />
+                <div className="detail-row">
+                  <span>{currentPredictive.Failures_Last_6_Months}</span>
+                  <strong>No. of Failures (Last 6 Months) </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentPredictive.Avg_Repair_Time}
+                    <strong>hrs</strong>
+                  </span>
+                  <strong>Avg. Repair Time</strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentPredictive.Temperature}</span>
+                  <strong>Temperature </strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentPredictive.Corrosion_Level}</span>
+                  <strong>Corrosion Level </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentPredictive.Wind_Speed}
+                    <strong>km/hr</strong>
+                  </span>
+                  <strong>Wind Speed </strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentPredictive.Last_Maintenance_Date}</span>
+                  <strong>Last Maintenance Date </strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentPredictive.Failure_Probability}%</span>
+                  <strong>Failure Probability </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentPredictive.Failure_Probability > 60 ? "Yes" : "No"}
+                  </span>
+                  <strong>?Maintenance Required </strong>
+                </div>
               </div>
             </div>
             <div

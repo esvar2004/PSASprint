@@ -23,6 +23,7 @@ body {
         background-position: 0% 50%;
     }
 }
+
 .predictive-container {
   background-color: transparent; /* Light blue background */
   padding: 20px;
@@ -126,10 +127,6 @@ body {
 
 .back-content strong {
   color: #ffd700; /* Gold color for labels */
-}
-
-.card:hover .content {
-  transform: rotateY(180deg);
 }
 
 .front {
