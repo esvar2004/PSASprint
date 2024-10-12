@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from psa.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('psa/', add_psa),
 ]
