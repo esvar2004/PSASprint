@@ -236,22 +236,25 @@
 // export default Freight;
 
 import React, { useState, useEffect } from "react";
-import "../css/predictive.css"; // Ensure the CSS file is imported
+import "../css/freight.css"; // Ensure the CSS file is imported
 
 interface FreightEntry {
-  id: number; // Assuming the same id structure as predictive
-  Equipment_ID: string; // Adjusted based on your previous structure
-  Operation_Hours: number;
-  Load_Capacity: number;
-  Port_Country: string;
-  Failures_Last_6_Months: number;
-  Avg_Repair_Time: number;
-  Temperature: number;
-  Corrosion_Level: "high" | "medium" | "low";
-  Wind_Speed: number;
-  Last_Maintenance_Date: string;
-  Failure_Probability: number;
-  Maintenance_Required: boolean;
+  freight_id: number; // Unique identifier for the freight
+  user_id: number; // User ID associated with the freight
+  cargo_type: string; // Type of cargo
+  weight: number; // Weight of the cargo
+  dimensions: string; // Dimensions of the cargo
+  origin: string; // Origin location
+  destination: string; // Destination location
+  pickup_date: string; // Pickup date (use string for ISO format)
+  delivery_date: string; // Delivery date (use string for ISO format)
+  estimated_delivery_time: number; // Estimated delivery time in hours
+  estimated_cost: number; // Estimated cost
+  carbon_emissions: number; // Carbon emissions in kg
+  status: string; // Freight status
+  freight_priority: string; // Freight priority
+  created_at: string; // Creation date (use string for ISO format)
+  updated_at: string; // Update date (use string for ISO format)
 }
 
 const Freight: React.FC = () => {
@@ -268,7 +271,7 @@ const Freight: React.FC = () => {
     const fetchFreight = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
+          `http://127.0.0.1:8000/list_freights/?origin=India`
         ); // Adjust the URL as needed
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -301,15 +304,12 @@ const Freight: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   const currentFreight = freights[currentIndex];
+  console.log(currentFreight);
 
   return (
     <div className="predictive-container">
-      {" "}
-      {/* Use existing class for styling */}
       <h1>Freight Entries</h1>
       <div className="predictive-cards">
-        {" "}
-        {/* Use existing class for styling */}
         <button
           type="button"
           onClick={nextCard}
@@ -326,60 +326,109 @@ const Freight: React.FC = () => {
         </button>
         <div
           className="card"
-          key={currentFreight.id}
+          key={currentFreight.freight_id}
           style={{
-            width: `${screenDimensions.width * 0.1}px`,
-            height: `${screenDimensions.height * 0.4}px`,
+            width: `${screenDimensions.width * 0.3}px`,
+            height: `${screenDimensions.height * 0.5}px`,
             perspective: "1000px", // For 3D effect
           }}
         >
           <div className="content">
             <div className="back">
               <div className="back-content">
-                <h2>Details</h2>
-                <p>
-                  Failures Last 6 Months:{" "}
-                  {currentFreight.Failures_Last_6_Months}
-                </p>
-                <p>
-                  Average Repair Time: {currentFreight.Avg_Repair_Time} hours
-                </p>
-                <p>Temperature: {currentFreight.Temperature}°C</p>
-                <p>Corrosion Level: {currentFreight.Corrosion_Level}</p>
-                <p>Wind Speed: {currentFreight.Wind_Speed} km/h</p>
-                <p>
-                  Last Maintenance Date: {currentFreight.Last_Maintenance_Date}
-                </p>
-                <p>
-                  Failure Probability: {currentFreight.Failure_Probability}%
-                </p>
-                <p>
-                  Maintenance Required:{" "}
-                  {currentFreight.Maintenance_Required ? "Yes" : "No"}
-                </p>
+                <h2 className="details-title">Freight Details</h2>
+                <hr className="divider" />
+                <div className="detail-row">
+                  <span>{currentFreight.cargo_type}</span>
+                  <strong>Cargo Type </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.weight}
+                    <strong>kg</strong>
+                  </span>
+                  <strong>Weight </strong>
+                </div>
+                <div className="detail-row">
+                  <span>{currentFreight.dimensions}</span>
+                  <strong>Dimensions </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {new Date(currentFreight.pickup_date).toLocaleDateString()}
+                  </span>
+                  <strong>Pickup Date </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {new Date(
+                      currentFreight.delivery_date
+                    ).toLocaleDateString()}
+                  </span>
+                  <strong>Delivery Date </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.estimated_delivery_time}
+                    <strong>hours</strong>
+                  </span>
+                  <strong>Estimated Delivery Time </strong>
+                </div>
+                <div className="detail-row">
+                  <span>${currentFreight.estimated_cost.toFixed(2)}</span>
+                  <strong>Estimated Cost </strong>
+                </div>
+                <div className="detail-row">
+                  <span>
+                    {currentFreight.carbon_emissions}
+                    <strong>kg</strong>
+                  </span>
+                  <strong>Carbon Emissions </strong>
+                </div>
               </div>
             </div>
+
             <div
               style={{
-                backgroundColor: "#151515", // Use camelCase for CSS properties
-                position: "absolute", // Use quotes for string values
+                backgroundColor: "#151515",
+                position: "absolute",
                 width: "100%",
                 height: "100%",
-                backfaceVisibility: "hidden", // Use camelCase for CSS properties
-                borderRadius: "5px", // Use camelCase for CSS properties
+                backfaceVisibility: "hidden",
+                borderRadius: "5px",
                 overflow: "hidden",
-                backgroundImage: `url('/images/countries/${currentFreight.Port_Country}.jpg')`, // Adjust path as needed
+                backgroundImage: `url('/images/countries/${currentFreight.origin}.jpg')`, // Adjust path as needed
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "cover", // Optional: Add this if you want to cover the entire area
+                backgroundSize: "cover",
               }}
             >
               <div className="front-content">
-                <h2>{currentFreight.Equipment_ID}</h2>
+                <h2>{currentFreight.freight_id}</h2>
                 <div className="description">
-                  <p>Operation Hours: {currentFreight.Operation_Hours}</p>
-                  <p>Load Capacity: {currentFreight.Load_Capacity}</p>
-                  <p>Port Country: {currentFreight.Port_Country}</p>
+                  <p>
+                    <span style={{ color: "red" }}>
+                      {currentFreight.origin}
+                    </span>{" "}
+                    <span style={{ color: "white" }}>to</span>{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.destination}
+                    </span>
+                  </p>
+                  <p>
+                    Status:{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.status}
+                    </span>{" "}
+                    {/* Change color for Status */}
+                  </p>
+                  <p>
+                    Priority:{" "}
+                    <span style={{ color: "red" }}>
+                      {currentFreight.freight_priority}
+                    </span>{" "}
+                    {/* Change color for Priority */}
+                  </p>
                 </div>
               </div>
             </div>
