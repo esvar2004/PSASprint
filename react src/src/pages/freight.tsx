@@ -397,7 +397,7 @@ const Freight: React.FC = () => {
                 backfaceVisibility: "hidden",
                 borderRadius: "5px",
                 overflow: "hidden",
-                backgroundImage: `url('/images/countries/${currentFreight.origin}.jpg')`, // Adjust path as needed
+                backgroundImage: `url('/images/countries/${currentFreight.destination}.jpg')`, // Adjust path as needed
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
