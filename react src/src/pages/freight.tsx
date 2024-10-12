@@ -235,45 +235,46 @@
 
 // export default Freight;
 
-// src/pages/AnotherPage.tsx
-// src/pages/AnotherPage.tsx
 import React, { useState, useEffect } from "react";
-import "./Freight.css"; // Importing the CSS file
+import "../css/predictive.css"; // Ensure the CSS file is imported
 
 interface FreightEntry {
-  freight_id: number;
-  user_id: number;
-  cargo_type: string;
-  weight: number;
-  dimensions: string;
-  origin: string;
-  destination: string;
-  pickup_date: string; // Use string for date representation (e.g., ISO format)
-  delivery_date: string; // Use string for date representation (e.g., ISO format)
-  estimated_delivery_time: number; // Assuming this is in hours or days
-  estimated_cost: number;
-  carbon_emissions: number;
-  status: "available" | "in_transit" | "delivered"; // Based on your choices
-  freight_priority: "high" | "medium" | "low"; // Based on your choices
-  created_at: string; // Use string for date representation (e.g., ISO format)
-  updated_at: string; // Use string for date representation (e.g., ISO format)
+  id: number; // Assuming the same id structure as predictive
+  Equipment_ID: string; // Adjusted based on your previous structure
+  Operation_Hours: number;
+  Load_Capacity: number;
+  Port_Country: string;
+  Failures_Last_6_Months: number;
+  Avg_Repair_Time: number;
+  Temperature: number;
+  Corrosion_Level: "high" | "medium" | "low";
+  Wind_Speed: number;
+  Last_Maintenance_Date: string;
+  Failure_Probability: number;
+  Maintenance_Required: boolean;
 }
 
 const Freight: React.FC = () => {
-  const [freights, setFreights] = useState<FreightEntry[]>([]);
+  const [freights, setFreight] = useState<FreightEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
+  const [screenDimensions, setScreenDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
-    const fetchFreights = async () => {
+    const fetchFreight = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/list_freights/"); // Adjust the endpoint accordingly
+        const response = await fetch(
+          `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
+        ); // Adjust the URL as needed
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data);
-        setFreights(data);
+        setFreight(data);
       } catch (error_) {
         setError((error_ as Error).message);
       } finally {
@@ -281,63 +282,123 @@ const Freight: React.FC = () => {
       }
     };
 
-    fetchFreights();
+    fetchFreight();
   }, []);
+
+  const previousCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex > 0 ? previousIndex - 1 : freights.length - 1
+    );
+  };
+
+  const nextCard = () => {
+    setCurrentIndex((previousIndex) =>
+      previousIndex < freights.length - 1 ? previousIndex + 1 : 0
+    );
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const currentFreight = freights[currentIndex];
+
   return (
-    <div>
+    <div className="predictive-container">
+      {" "}
+      {/* Use existing class for styling */}
       <h1>Freight Entries</h1>
-      <div className="freight-cards">
-        {freights.map((freight) => (
-          <div className="card" key={freight.freight_id}>
-            <section className="landscape-section">
-              <div className="sky"></div>
-              <div className="sun"></div>
-              <div className="hill-1"></div>
-              <div className="hill-2"></div>
-              <div className="ocean">
-                <div className="reflection"></div>
-                <div className="reflection"></div>
-                <div className="reflection"></div>
-                <div className="reflection"></div>
-                <div className="reflection"></div>
-                <div className="shadow-hill-1"></div>
-                <div className="shadow-hill-2"></div>
+      <div className="predictive-cards">
+        {" "}
+        {/* Use existing class for styling */}
+        <button
+          type="button"
+          onClick={nextCard}
+          disabled={freights.length <= 1}
+        >
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
+            alt="Next"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
+        </button>
+        <div
+          className="card"
+          key={currentFreight.id}
+          style={{
+            width: `${screenDimensions.width * 0.1}px`,
+            height: `${screenDimensions.height * 0.4}px`,
+            perspective: "1000px", // For 3D effect
+          }}
+        >
+          <div className="content">
+            <div className="back">
+              <div className="back-content">
+                <h2>Details</h2>
+                <p>
+                  Failures Last 6 Months:{" "}
+                  {currentFreight.Failures_Last_6_Months}
+                </p>
+                <p>
+                  Average Repair Time: {currentFreight.Avg_Repair_Time} hours
+                </p>
+                <p>Temperature: {currentFreight.Temperature}°C</p>
+                <p>Corrosion Level: {currentFreight.Corrosion_Level}</p>
+                <p>Wind Speed: {currentFreight.Wind_Speed} km/h</p>
+                <p>
+                  Last Maintenance Date: {currentFreight.Last_Maintenance_Date}
+                </p>
+                <p>
+                  Failure Probability: {currentFreight.Failure_Probability}%
+                </p>
+                <p>
+                  Maintenance Required:{" "}
+                  {currentFreight.Maintenance_Required ? "Yes" : "No"}
+                </p>
               </div>
-              <div className="hill-3"></div>
-              <div className="hill-4"></div>
-              {/* Add trees here if needed */}
-              <div className="filter"></div>
-            </section>
-            <section className="content-section">
-              <div className="weather-info">
-                <div className="left-side">
-                  {/* Add weather icon and description here */}
-                  <p>Cloudy</p>
-                </div>
-                <div className="right-side">
-                  <div className="location">
-                    <span>
-                      {freight.origin} to {freight.destination}
-                    </span>
-                  </div>
-                  <p>Pickup Date: {freight.pickup_date}</p>
-                  <p>Delivery Date: {freight.delivery_date}</p>
+            </div>
+            <div
+              style={{
+                backgroundColor: "#151515", // Use camelCase for CSS properties
+                position: "absolute", // Use quotes for string values
+                width: "100%",
+                height: "100%",
+                backfaceVisibility: "hidden", // Use camelCase for CSS properties
+                borderRadius: "5px", // Use camelCase for CSS properties
+                overflow: "hidden",
+                backgroundImage: `url('/images/countries/${currentFreight.Port_Country}.jpg')`, // Adjust path as needed
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover", // Optional: Add this if you want to cover the entire area
+              }}
+            >
+              <div className="front-content">
+                <h2>{currentFreight.Equipment_ID}</h2>
+                <div className="description">
+                  <p>Operation Hours: {currentFreight.Operation_Hours}</p>
+                  <p>Load Capacity: {currentFreight.Load_Capacity}</p>
+                  <p>Port Country: {currentFreight.Port_Country}</p>
                 </div>
               </div>
-              <div className="forecast">
-                <div>
-                  <p>Weight: {freight.weight} kg</p>
-                  <p>Estimated Cost: ${freight.estimated_cost}</p>
-                </div>
-                {/* Add more freight details here as needed */}
-              </div>
-            </section>
+            </div>
           </div>
-        ))}
+        </div>
+        <button
+          type="button"
+          onClick={previousCard}
+          disabled={freights.length <= 1}
+        >
+          <img
+            src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
+            alt="Previous"
+            style={{
+              width: `${screenDimensions.width * 0.02}px`,
+              height: `${screenDimensions.width * 0.02}px`,
+            }} // Adjust size as needed
+          />
+        </button>
       </div>
     </div>
   );
