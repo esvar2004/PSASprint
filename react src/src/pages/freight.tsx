@@ -20,10 +20,26 @@ interface FreightEntry {
   updated_at: string;
 }
 
+interface LogisticsEntry {
+  provider_id: number;
+  name: string;
+  contact_info: string;
+  eco_certification: string;
+  sustainability_rating: number; // FloatField equivalent
+  average_carbon_emissions: number; // FloatField equivalent
+  route_origin: string;
+  route_destination: string;
+  created_at: string; // DateField equivalent
+  updated_at: string; // DateField equivalent
+}
+
 const Freight: React.FC = () => {
   const [freights, setFreight] = useState<FreightEntry[]>([]);
+  const [logistics, setLogistics] = useState<LogisticsEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingLogistics, setLoadingLogistics] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorLogistics, setErrorLogistics] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
   const [screenDimensions, setScreenDimensions] = useState({
     width: window.innerWidth,
@@ -49,6 +65,24 @@ const Freight: React.FC = () => {
     };
 
     fetchFreight();
+  }, []);
+
+  useEffect(() => {
+    const fetchLogistics = async () => {
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/list_logistics/?origin=${"India"}`
+        );
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        setLogistics(data);
+      } catch (error_) {
+        setErrorLogistics((error_ as Error).message);
+      } finally {
+        setLoadingLogistics(false);
+      }
+    };
+    fetchLogistics();
   }, []);
 
   const previousCard = () => {
