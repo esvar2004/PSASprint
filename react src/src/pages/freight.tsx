@@ -34,6 +34,7 @@ interface LogisticsEntry {
 }
 
 interface ProviderRecommendation {
+  "Provider Name": string;
   "Provider ID": number;
   "Route Origin": string;
   "Route Destination": string;
@@ -144,6 +145,7 @@ const Freight: React.FC = () => {
       previousIndex > 0 ? previousIndex - 1 : freights.length - 1
     );
     setFlipped(false);
+    setRecommendedProviders(null);
   };
 
   const nextCard = () => {
@@ -151,6 +153,7 @@ const Freight: React.FC = () => {
       previousIndex < freights.length - 1 ? previousIndex + 1 : 0
     );
     setFlipped(false);
+    setRecommendedProviders(null);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -324,6 +327,124 @@ const Freight: React.FC = () => {
         >
           Check Best Providers
         </button>
+      )}
+      {/* Display the recommended providers */}
+      {loadingRecommendations && <div>Loading recommendations...</div>}
+      {errorRecommendations && <div>Error: {errorRecommendations}</div>}
+
+      {recommendedProviders && recommendedProviders.length > 0 && (
+        <div style={{ marginTop: "20px" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              marginTop: "10px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              overflow: "hidden",
+            }}
+          >
+            <thead>
+              <tr
+                style={{
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                  height: "50px",
+                }}
+              >
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Provider ID
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Route Destination
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Route Origin
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Sustainability Rating
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Average Carbon Emissions (kg)
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Sustainability Score
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Speed Score
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>
+                  Combined Score
+                </th>
+                <th style={{ padding: "10px", textAlign: "left" }}>Provider</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recommendedProviders.map((provider, index) => (
+                <tr
+                  key={index}
+                  style={{
+                    backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.backgroundColor = "#e9ecef";
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.backgroundColor =
+                      index % 2 === 0 ? "#f9f9f9" : "white";
+                  }}
+                >
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Provider ID"]}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Route Destination"]}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Route Origin"]}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Sustainability Rating"].toFixed(2)}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Average Carbon Emissions"].toFixed(2)}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Sustainability Score"].toFixed(2)}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Speed Score"].toFixed(2)}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Combined Score"].toFixed(2)}
+                  </td>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
+                  >
+                    {provider["Provider Name"]}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

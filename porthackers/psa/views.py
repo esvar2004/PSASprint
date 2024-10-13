@@ -318,6 +318,7 @@ def predict_from_api(request, freight_id):
     for rec in recommendations:
         provider = logistic_df.iloc[rec['provider_idx']]  # Get provider details from DataFrame
         provider_details = {
+            "Provider Name": provider['name'],
             "Provider ID": provider['provider_id'],  # Replace with actual field names from your model
             "Route Origin": provider['route_origin'],
             "Route Destination": provider['route_destination'],
