@@ -25,5 +25,5 @@ urlpatterns = [
     path('list_predictive/', get_predictive, name = 'list_predictive'),
     path('list_logistics/', get_logistics, name = 'list_logistics'),
     path('list_routes/', get_freights_in_transit, name = 'list_routes'),
-    path('predict_from_api/', predict_from_api, name='predict_from_api'),
+    path('predict_from_api/<int:freight_id>/', predict_from_api, name='predict_from_api'),
 ]

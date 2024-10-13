@@ -277,9 +277,10 @@ def convert_to_serializable(obj):
     else:
         return obj
 
-# View to return predictive freight recommendations
-def predict_from_api(request):
-    recommender = SustainableFreightRecommender()  # Initialize the AI model
+# View to return predictive freight recommendations based on freight_id from URL
+def predict_from_api(request, freight_id):
+    # Initialize the AI model
+    recommender = SustainableFreightRecommender()
 
     # Fetch data from the TopFreight and TopLogistic models
     freight_data = list(TopFreight.objects.all().values())
@@ -289,6 +290,13 @@ def predict_from_api(request):
     freight_df = pd.DataFrame(freight_data)
     logistic_df = pd.DataFrame(logistic_data)
 
+    # Check if the requested freight_id exists in the dataset
+    if not freight_df[freight_df['freight_id'] == int(freight_id)].empty:
+        selected_freight = freight_df[freight_df['freight_id'] == int(freight_id)].iloc[0]
+        logger.info(selected_freight)
+    else:
+        return JsonResponse({"error": f"No freight found with freight_id {freight_id}."}, status=404)
+
     # Preprocess the data using the AI model's preprocess_data method
     freight_features, provider_features = recommender.preprocess_data(freight_df, logistic_df)
 
@@ -296,17 +304,10 @@ def predict_from_api(request):
     model = recommender.build_model(freight_features.shape[1], provider_features.shape[1])
     history = recommender.train_model(freight_features, provider_features)
 
-    # Get the first available freight to make a prediction (for example)
-    available_freight = freight_df[freight_df['status'] == 'available']
-    if available_freight.empty:
-        return JsonResponse({"error": "No available freights for prediction."}, status=404)
-
-    selected_freight_id = available_freight.iloc[0]['freight_id']
-
-    # Generate recommendations using the AI model
+    # Generate recommendations using the AI model for the specific freight ID
     recommendations = recommender.recommend_matches(
         freight_features, provider_features,
-        freight_id=selected_freight_id,
+        freight_id=selected_freight['freight_id'],
         freight_df=freight_df,
         logistics_provider_df=logistic_df,
         top_n=3
@@ -333,4 +334,3 @@ def predict_from_api(request):
 
     # Return the recommendations as a JSON response
     return JsonResponse(serializable_response, safe=False)
-

@@ -33,6 +33,17 @@ interface LogisticsEntry {
   updated_at: string; // DateField equivalent
 }
 
+interface ProviderRecommendation {
+  "Provider ID": number;
+  "Route Origin": string;
+  "Route Destination": string;
+  "Sustainability Rating": number;
+  "Average Carbon Emissions": number;
+  "Sustainability Score": number;
+  "Speed Score": number;
+  "Combined Score": number;
+}
+
 const Freight: React.FC = () => {
   const [freights, setFreight] = useState<FreightEntry[]>([]);
   const [logistics, setLogistics] = useState<LogisticsEntry[]>([]);
@@ -96,6 +107,37 @@ const Freight: React.FC = () => {
     };
     fetchLogistics();
   }, []);
+
+  const [recommendedProviders, setRecommendedProviders] = useState<
+    ProviderRecommendation[] | null
+  >(null);
+  const [loadingRecommendations, setLoadingRecommendations] =
+    useState<boolean>(false);
+  const [errorRecommendations, setErrorRecommendations] = useState<
+    string | null
+  >(null);
+
+  const handleCheckProviders = async (freightId: number) => {
+    setLoadingRecommendations(true);
+    setRecommendedProviders(null);
+    setErrorRecommendations(null);
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/predict_from_api/${freightId}/`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch provider recommendations.");
+      }
+      const data = await response.json();
+      console.log(data);
+      setRecommendedProviders(data);
+    } catch (error_) {
+      setErrorRecommendations((error_ as Error).message);
+    } finally {
+      setLoadingRecommendations(false);
+    }
+  };
 
   const previousCard = () => {
     setCurrentIndex((previousIndex) =>
@@ -203,28 +245,6 @@ const Freight: React.FC = () => {
                   </span>
                   <strong>Carbon Emissions </strong>
                 </div>
-
-                {/* Conditionally render the button if status is "available" */}
-                {currentFreight.status.toLowerCase() === "available" && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // Add the logic to check the best providers
-                      console.log("Checking best providers...");
-                    }}
-                    style={{
-                      marginTop: "20px",
-                      padding: "10px 20px",
-                      backgroundColor: "#007BFF",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Check Best Providers
-                  </button>
-                )}
               </div>
             </div>
 
@@ -287,6 +307,24 @@ const Freight: React.FC = () => {
           />
         </button>
       </div>
+      {/* Conditionally render the button if status is "available" */}
+      {currentFreight.status.toLowerCase() === "available" && (
+        <button
+          type="button"
+          onClick={() => handleCheckProviders(currentFreight.freight_id)}
+          style={{
+            marginTop: "20px",
+            padding: "10px 20px",
+            backgroundColor: "#007BFF",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Check Best Providers
+        </button>
+      )}
     </div>
   );
 };
