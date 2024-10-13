@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from psa.views import *
+# from app import make_prediction
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +24,6 @@ urlpatterns = [
     path('list_freights/', get_freights, name='list_freights'),
     path('list_predictive/', get_predictive, name = 'list_predictive'),
     path('list_logistics/', get_logistics, name = 'list_logistics'),
-    path('list_routes/', get_freights_in_transit, name = 'list_routes')
+    path('list_routes/', get_freights_in_transit, name = 'list_routes'),
+    path('predict_from_api/', predict_from_api, name='predict_from_api'),
 ]
