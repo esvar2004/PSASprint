@@ -1,10 +1,14 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable prettier/prettier */
-import React, { useRef, useState } from "react";
+// src/components/MapComponent.tsx
+
+import React, { useRef, useState, useEffect } from "react";
 import {
   GoogleMap,
   useLoadScript,
   OverlayView,
   MarkerF,
+  Polyline,
 } from "@react-google-maps/api";
 
 // Define the types for Country and Marker data
@@ -51,18 +55,38 @@ function MapComponent() {
   // Load the Google Maps script with your API key
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: apiKey,
-    // Include any necessary libraries
-    libraries: [], // Add libraries if needed
   });
+
+  // Generate polylines between each pair of markers (complete graph)
+  const polylines: Array<google.maps.LatLngLiteral[]> = [];
+  for (let index = 0; index < countries.length; index++) {
+    for (let index_ = index + 1; index_ < countries.length; index_++) {
+      polylines.push([
+        { lat: countries[index].lat, lng: countries[index].lng },
+        { lat: countries[index_].lat, lng: countries[index_].lng },
+      ]);
+    }
+  }
 
   const mapReference = useRef<google.maps.Map | null>(null);
 
   // State to manage the currently selected marker for showing InfoWindow
   const [selectedMarker, setSelectedMarker] = useState<MarkerInfo | null>(null);
 
+  // State to manage which marker is animated
+  const [activeMarker, setActiveMarker] = useState<string | null>(null);
+
+  const [mapLoaded, setMapLoaded] = useState(false);
+
+  useEffect(() => {
+    console.log("Map loaded:", mapLoaded);
+    console.log("Number of polylines:", polylines.length);
+  }, [mapLoaded, polylines]);
+
   // Function to handle closing the InfoWindow
   const handleInfoWindowClose = () => {
     setSelectedMarker(null);
+    setActiveMarker(null);
   };
 
   if (loadError) {
@@ -73,28 +97,69 @@ function MapComponent() {
     return <div>Loading map...</div>;
   }
 
+  // Define the map options to restrict vertical panning and disable certain controls
+  const mapOptions: google.maps.MapOptions = {
+    restriction: {
+      latLngBounds: {
+        north: 85, // Maximum latitude
+        south: -85, // Minimum latitude
+        east: 180,
+        west: -180,
+      },
+      strictBounds: true,
+    },
+    streetViewControl: false,
+    mapTypeControl: false,
+  };
+
+  console.log("Polylines:", polylines);
+
+  // Define an array of colors to use for polylines
+  const colors = ["#ff0000"];
+
   return (
     <div className="relative" style={{ width: "100%", height: "100vh" }}>
-      {/* Render the Google Map */}
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: 20, lng: 0 }} // Initial center of the map
-        zoom={2} // Initial zoom level
+        center={{ lat: 20, lng: 5 }}
+        zoom={3}
+        options={mapOptions}
         onLoad={(map) => {
-          mapReference.current = map; // Save the map reference for later use
+          mapReference.current = map;
+          setMapLoaded(true);
         }}
       >
+        {/* Render Polylines */}
+        {polylines.map((path, index) => (
+          <Polyline
+            key={index}
+            path={path}
+            options={{
+              geodesic: true,
+              strokeColor: "#ff0000",
+              strokeOpacity: 1,
+              strokeWeight: 3,
+            }}
+          />
+        ))}
+
         {/* Render Markers */}
         {countries.map((country) => (
           <MarkerF
             key={country.name}
             position={{ lat: country.lat, lng: country.lng }}
             title={country.name}
+            animation={
+              activeMarker === country.name
+                ? google.maps.Animation.BOUNCE
+                : undefined
+            }
             onClick={() => {
               setSelectedMarker({
                 position: { lat: country.lat, lng: country.lng },
                 country: country.name,
               });
+              setActiveMarker(country.name);
             }}
           />
         ))}
@@ -108,19 +173,22 @@ function MapComponent() {
             <div
               style={{
                 position: "relative",
-                transform: "translate(-50%, -100%)",
+                transform: "translate(-50%, -120%)", // Adjusted to bring it above the marker
                 cursor: "auto",
+                zIndex: 20, // Ensure it's above other elements
+                animation: "fadeIn 0.3s", // Add fade-in animation
               }}
             >
               {/* Custom InfoWindow Content */}
               <div
                 style={{
                   width: "320px",
-                  backgroundColor: "#fff",
+                  backgroundColor: "#ffffff",
                   borderRadius: "15px",
                   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
                   overflow: "hidden",
                   fontFamily: "'Roboto', sans-serif",
+                  position: "relative",
                 }}
               >
                 {/* Image Section */}
@@ -134,18 +202,28 @@ function MapComponent() {
                     position: "relative",
                   }}
                 >
+                  {/* Overlay for darker effect */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    }}
+                  />
                   {/* Country Name Overlay */}
                   <div
                     style={{
                       position: "absolute",
-                      bottom: "0",
+                      bottom: "10px",
                       width: "100%",
-                      background: "rgba(0, 0, 0, 0.5)",
                       color: "#fff",
-                      padding: "10px",
                       textAlign: "center",
-                      fontSize: "1.5em",
+                      fontSize: "1.8em",
                       fontWeight: "bold",
+                      textShadow: "0 2px 4px rgba(0,0,0,0.5)",
                     }}
                   >
                     {selectedMarker.country}
@@ -154,7 +232,11 @@ function MapComponent() {
                 {/* Content Section */}
                 <div style={{ padding: "20px", textAlign: "center" }}>
                   <ul
-                    style={{ listStyleType: "none", padding: "0", margin: "0" }}
+                    style={{
+                      listStyleType: "none",
+                      padding: "0",
+                      margin: "0",
+                    }}
                   >
                     <li style={{ marginBottom: "15px" }}>
                       <a
@@ -231,6 +313,7 @@ function MapComponent() {
                     borderRadius: "50%",
                     outline: "none",
                   }}
+                  aria-label="Close Information Window"
                 >
                   &times;
                 </button>
@@ -239,6 +322,15 @@ function MapComponent() {
           </OverlayView>
         )}
       </GoogleMap>
+      {/* Add CSS for fade-in animation */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -130%); }
+            to { opacity: 1; transform: translate(-50%, -120%); }
+          }
+        `}
+      </style>
     </div>
   );
 }
