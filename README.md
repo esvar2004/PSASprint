@@ -47,12 +47,11 @@ python manage.py migrate
 5. Start the Django server:
 ```bash
 python manage.py runserver
-Frontend (React)
 ```
 
 6. Navigate to the frontend directory:
 ```bash
-cd frontend
+cd "react src"
 ```
 
 7. Install dependencies:
