@@ -29,28 +29,37 @@ const Predictive: React.FC = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [selectedCountry, setSelectedCountry] = useState("India");
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   useEffect(() => {
-    const fetchPredictive = async () => {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:8000/list_predictive/?port_country=${"India"}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+    const fetchData = async () => {
+      const queryParameters = new URLSearchParams(window.location.search);
+      const country = queryParameters.get("port_country");
+
+      if (country) {
+        setSelectedCountry(country);
+
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/list_predictive/?port_country=${country}`
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          setPredictive(data);
+        } catch (error_) {
+          setError((error_ as Error).message);
+        } finally {
+          setLoading(false);
         }
-        const data = await response.json();
-        setPredictive(data);
-      } catch (error_) {
-        setError((error_ as Error).message);
-      } finally {
-        setLoading(false);
+      } else {
+        setLoading(false); // No country means stop loading
       }
     };
 
-    fetchPredictive();
-  }, []);
+    fetchData();
+  }, []); // Run only once on component mount
 
   const previousCard = () => {
     setCurrentIndex((previousIndex) =>
@@ -120,13 +129,16 @@ const Predictive: React.FC = () => {
                 </div>
                 <div className="detail-row">
                   <span>
-                    {currentPredictive.Avg_Repair_Time}
+                    {currentPredictive.Avg_Repair_Time.toFixed(2)}
                     <strong>hrs</strong>
                   </span>
                   <strong>Avg. Repair Time</strong>
                 </div>
                 <div className="detail-row">
-                  <span>{currentPredictive.Temperature}</span>
+                  <span>
+                    {currentPredictive.Temperature.toFixed(2)}
+                    <strong>C</strong>
+                  </span>
                   <strong>Temperature </strong>
                 </div>
                 <div className="detail-row">
@@ -135,7 +147,7 @@ const Predictive: React.FC = () => {
                 </div>
                 <div className="detail-row">
                   <span>
-                    {currentPredictive.Wind_Speed}
+                    {currentPredictive.Wind_Speed.toFixed(2)}
                     <strong>km/hr</strong>
                   </span>
                   <strong>Wind Speed </strong>
@@ -145,7 +157,9 @@ const Predictive: React.FC = () => {
                   <strong>Last Maintenance Date </strong>
                 </div>
                 <div className="detail-row">
-                  <span>{currentPredictive.Failure_Probability}%</span>
+                  <span>
+                    {currentPredictive.Failure_Probability.toFixed(2)}%
+                  </span>
                   <strong>Failure Probability </strong>
                 </div>
                 <div className="detail-row">

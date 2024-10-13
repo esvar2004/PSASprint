@@ -40,17 +40,22 @@ const Freight: React.FC = () => {
   const [loadingLogistics, setLoadingLogistics] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [errorLogistics, setErrorLogistics] = useState<string | null>(null);
+  const [flipped, setFlipped] = useState<boolean>(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0); // Track the current card index
   const [screenDimensions, setScreenDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   useEffect(() => {
     const fetchFreight = async () => {
+      const queryParameters = new URLSearchParams(window.location.search);
+      const country = queryParameters.get("origin");
+
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/list_freights/?origin=${"India"}`
+          `http://127.0.0.1:8000/list_freights/?origin=${country}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -68,10 +73,17 @@ const Freight: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const queryParameters = new URLSearchParams(window.location.search);
+    const country = queryParameters.get("origin");
+
+    if (country) {
+      setSelectedCountry(country);
+    }
+
     const fetchLogistics = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/list_logistics/?origin=${"India"}`
+          `http://127.0.0.1:8000/list_logistics/?origin=${country}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
@@ -89,12 +101,14 @@ const Freight: React.FC = () => {
     setCurrentIndex((previousIndex) =>
       previousIndex > 0 ? previousIndex - 1 : freights.length - 1
     );
+    setFlipped(false);
   };
 
   const nextCard = () => {
     setCurrentIndex((previousIndex) =>
       previousIndex < freights.length - 1 ? previousIndex + 1 : 0
     );
+    setFlipped(false);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -104,7 +118,14 @@ const Freight: React.FC = () => {
 
   return (
     <div className="predictive-container">
-      <h1>Freight Entries</h1>
+      <h1
+        style={{
+          fontSize: screenDimensions.width * 0.02,
+          fontFamily: "Georgia",
+        }}
+      >
+        Freight Entries at {selectedCountry}
+      </h1>
       <div className="predictive-cards">
         <button
           type="button"
@@ -128,8 +149,9 @@ const Freight: React.FC = () => {
             height: `${screenDimensions.height * 0.5}px`,
             perspective: "1000px", // For 3D effect
           }}
+          onClick={() => setFlipped(!flipped)}
         >
-          <div className="content">
+          <div className={`content ${flipped ? "flipped" : ""}`}>
             <div className="back">
               <div className="back-content">
                 <h2 className="details-title">Freight Details</h2>

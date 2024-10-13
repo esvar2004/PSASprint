@@ -87,3 +87,13 @@ def get_logistics(request):
             return JsonResponse(data_list, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+def get_freights_in_transit(request):
+    if request.method == 'GET':
+        try:
+            # Filter freights with status "in_transit" and only select origin and destination fields
+            freight_entries = TopFreight.objects.filter(status="in_transit").values('origin', 'destination')
+            data_list = list(freight_entries)  # Convert queryset to list of dicts with selected fields
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
