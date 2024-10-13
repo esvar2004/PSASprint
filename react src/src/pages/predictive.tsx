@@ -72,16 +72,16 @@ const Predictive: React.FC = () => {
       });
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const previousCard = () => {
     if (!isAnimating) {
       setIsAnimating(true);
       setIsFlipped(false);
-      setCurrentIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : predictives.length - 1
+      setCurrentIndex((previousIndex) =>
+        previousIndex > 0 ? previousIndex - 1 : predictives.length - 1
       );
       setTimeout(() => setIsAnimating(false), 500);
     }
@@ -91,8 +91,8 @@ const Predictive: React.FC = () => {
     if (!isAnimating) {
       setIsAnimating(true);
       setIsFlipped(false);
-      setCurrentIndex((prevIndex) =>
-        prevIndex < predictives.length - 1 ? prevIndex + 1 : 0
+      setCurrentIndex((previousIndex) =>
+        previousIndex < predictives.length - 1 ? previousIndex + 1 : 0
       );
       setTimeout(() => setIsAnimating(false), 500);
     }
@@ -114,12 +114,24 @@ const Predictive: React.FC = () => {
 
   return (
     <div className="predictive-container">
-      <div className="background-animation" dangerouslySetInnerHTML={{ __html: svgBackground }} />
-      <h1 style={{ fontSize: screenDimensions.width * 0.02, fontFamily: "Georgia" }}>
+      <div
+        className="background-animation"
+        dangerouslySetInnerHTML={{ __html: svgBackground }}
+      />
+      <h1
+        style={{
+          fontSize: screenDimensions.width * 0.02,
+          fontFamily: "Georgia",
+        }}
+      >
         Port Equipment at {selectedCountry}
       </h1>
       <div className="predictive-cards">
-        <button type="button" onClick={nextCard} disabled={predictives.length <= 1 || isAnimating}>
+        <button
+          type="button"
+          onClick={nextCard}
+          disabled={predictives.length <= 1 || isAnimating}
+        >
           <img
             src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
             alt="Next"
@@ -136,9 +148,11 @@ const Predictive: React.FC = () => {
             return (
               <div
                 key={card.id}
-                className={`card ${offset === -1 ? 'prev' : offset === 1 ? 'next' : 'current'} ${
-                  isAnimating ? 'animating' : ''
-                } ${offset === 0 && isFlipped ? 'flipped' : ''}`}
+                className={`card ${
+                  offset === -1 ? "prev" : offset === 1 ? "next" : "current"
+                } ${isAnimating ? "animating" : ""} ${
+                  offset === 0 && isFlipped ? "flipped" : ""
+                }`}
                 style={{
                   width: `${screenDimensions.width * 0.3}px`,
                   height: `${screenDimensions.height * 0.6}px`,
@@ -158,7 +172,12 @@ const Predictive: React.FC = () => {
                       }}
                     >
                       <div className="front-content">
-                        <h2 style={{ fontSize: screenDimensions.width * 0.02, fontFamily: "papyrus" }}>
+                        <h2
+                          style={{
+                            fontSize: screenDimensions.width * 0.02,
+                            fontFamily: "papyrus",
+                          }}
+                        >
                           {card.Equipment_ID}
                         </h2>
                         <div className="description">
@@ -176,7 +195,12 @@ const Predictive: React.FC = () => {
                     </div>
                   </div>
                   <div className="back">
-                    <div className="back-content" style={{ fontSize: screenDimensions.height * 0.15 * 0.11 }}>
+                    <div
+                      className="back-content"
+                      style={{
+                        fontSize: screenDimensions.height * 0.15 * 0.11,
+                      }}
+                    >
                       <h2 className="details-title">Port Details</h2>
                       <hr className="divider" />
                       <div className="detail-row">
@@ -217,7 +241,9 @@ const Predictive: React.FC = () => {
                         <strong>Failure Probability </strong>
                       </div>
                       <div className="detail-row">
-                        <span>{card.Failure_Probability > 60 ? "Yes" : "No"}</span>
+                        <span>
+                          {card.Failure_Probability > 60 ? "Yes" : "No"}
+                        </span>
                         <strong>Maintenance Required </strong>
                       </div>
                     </div>
@@ -227,7 +253,11 @@ const Predictive: React.FC = () => {
             );
           })}
         </div>
-        <button type="button" onClick={previousCard} disabled={predictives.length <= 1 || isAnimating}>
+        <button
+          type="button"
+          onClick={previousCard}
+          disabled={predictives.length <= 1 || isAnimating}
+        >
           <img
             src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
             alt="Previous"

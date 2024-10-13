@@ -181,8 +181,8 @@ const Freight: React.FC = () => {
             src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
             alt="Next"
             style={{
-              width: `${screenDimensions.width * 0.02}px`,
-              height: `${screenDimensions.width * 0.02}px`,
+              width: `${screenDimensions.width * 0.04}px`,
+              height: `${screenDimensions.width * 0.04}px`,
             }}
           />
         </button>
@@ -304,8 +304,8 @@ const Freight: React.FC = () => {
             src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
             alt="Previous"
             style={{
-              width: `${screenDimensions.width * 0.02}px`,
-              height: `${screenDimensions.width * 0.02}px`,
+              width: `${screenDimensions.width * 0.04}px`,
+              height: `${screenDimensions.width * 0.04}px`,
             }}
           />
         </button>

@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable prettier/prettier */
 // src/components/MapComponent.tsx
@@ -18,6 +19,10 @@ type Country = {
   lng: number;
 };
 
+type MapComponentProps = {
+  isHovering: boolean; // Prop to control hover animation
+};
+
 type MarkerInfo = {
   position: google.maps.LatLngLiteral;
   country: string;
@@ -31,22 +36,22 @@ const containerStyle = {
 
 // List of countries to display as markers on the map
 const countries: Country[] = [
-  { name: "China", lat: 35.8617, lng: 104.1954 },
-  { name: "India", lat: 20.5937, lng: 78.9629 },
-  { name: "Saudi Arabia", lat: 23.8859, lng: 45.0792 },
+  { name: "China", lat: 32.8617, lng: 119.1954 },
+  { name: "India", lat: 21.5937, lng: 69.9629 },
+  { name: "Saudi Arabia", lat: 20.8859, lng: 40.0792 },
   { name: "Singapore", lat: 1.3521, lng: 103.8198 },
-  { name: "Thailand", lat: 15.87, lng: 100.9925 },
+  { name: "Thailand", lat: 12.87, lng: 100.9925 },
   { name: "Belgium", lat: 50.8503, lng: 4.3517 },
   { name: "Italy", lat: 41.8719, lng: 12.5674 },
-  { name: "Poland", lat: 51.9194, lng: 19.1451 },
-  { name: "Brazil", lat: -14.235, lng: -51.9253 },
-  { name: "Canada", lat: 56.1304, lng: -106.3468 },
-  { name: "USA", lat: 37.0902, lng: -95.7129 },
-  { name: "Egypt", lat: 26.8206, lng: 30.8025 },
+  { name: "Poland", lat: 53.9194, lng: 19.1451 },
+  { name: "Brazil", lat: -4.235, lng: -41.9253 },
+  { name: "Canada", lat: 57.1304, lng: -94.3468 },
+  { name: "USA", lat: 34.5902, lng: -78.7129 },
+  { name: "Egypt", lat: 28.8206, lng: 30.8025 },
   { name: "Australia", lat: -25.2744, lng: 133.7751 },
 ];
 
-function MapComponent() {
+function MapComponent({ isHovering }: MapComponentProps) {
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   if (!apiKey) {
     throw new Error("API key is not defined. Please check your .env file.");
@@ -122,9 +127,10 @@ function MapComponent() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: 20, lng: 5 }}
-        zoom={3}
+        zoom={2.5}
         options={mapOptions}
         onLoad={(map) => {
+          console.log("Map loaded and reference set:", map);
           mapReference.current = map;
           setMapLoaded(true);
         }}
@@ -147,19 +153,45 @@ function MapComponent() {
         {countries.map((country) => (
           <MarkerF
             key={country.name}
-            position={{ lat: country.lat, lng: country.lng }}
+            position={
+              isHovering
+                ? {
+                    lat: country.lat + 1,
+                    lng: country.lng,
+                  }
+                : {
+                    lat: country.lat,
+                    lng: country.lng,
+                  }
+            }
             title={country.name}
             animation={
               activeMarker === country.name
                 ? google.maps.Animation.BOUNCE
                 : undefined
             }
+            icon={{
+              url: isHovering
+                ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                : "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Change color based on hover state
+            }}
             onClick={() => {
-              setSelectedMarker({
-                position: { lat: country.lat, lng: country.lng },
-                country: country.name,
-              });
-              setActiveMarker(country.name);
+              if (activeMarker !== country.name) {
+                setSelectedMarker({
+                  position: { lat: country.lat, lng: country.lng },
+                  country: country.name,
+                });
+                setActiveMarker(country.name);
+              }
+
+              if (mapReference.current) {
+                setTimeout(() => {
+                  mapReference.current?.panTo({
+                    lat: country.lat + 20,
+                    lng: country.lng,
+                  });
+                }, 1);
+              }
             }}
           />
         ))}
