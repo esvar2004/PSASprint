@@ -119,10 +119,10 @@ const Predictive: React.FC = () => {
         Port Equipment at {selectedCountry}
       </h1>
       <div className="predictive-cards">
-        <button type="button" onClick={previousCard} disabled={predictives.length <= 1 || isAnimating}>
+        <button type="button" onClick={nextCard} disabled={predictives.length <= 1 || isAnimating}>
           <img
             src={`${process.env.PUBLIC_URL}/images/arrow-right.png`}
-            alt="Previous"
+            alt="Next"
             style={{
               width: `${screenDimensions.width * 0.02}px`,
               height: `${screenDimensions.width * 0.02}px`,
@@ -227,10 +227,10 @@ const Predictive: React.FC = () => {
             );
           })}
         </div>
-        <button type="button" onClick={nextCard} disabled={predictives.length <= 1 || isAnimating}>
+        <button type="button" onClick={previousCard} disabled={predictives.length <= 1 || isAnimating}>
           <img
             src={`${process.env.PUBLIC_URL}/images/arrow-left.png`}
-            alt="Next"
+            alt="Previous"
             style={{
               width: `${screenDimensions.width * 0.02}px`,
               height: `${screenDimensions.width * 0.02}px`,

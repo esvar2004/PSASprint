@@ -120,8 +120,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Load the pre-trained model
-model_path = os.path.join(settings.BASE_DIR, 'psa', 'management', 'data', 'trained_model.h5')
-model = load_model(model_path)
+# model_path = os.path.join(settings.BASE_DIR, 'psa', 'management', 'data', 'trained_model.h5')
+# model = load_model(model_path)
 
 # from django.http import JsonResponse
 # from .models import TopFreight, TopLogistic
