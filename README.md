@@ -52,7 +52,6 @@ Frontend (React)
 
 6. Navigate to the frontend directory:
 ```bash
-Copy code
 cd frontend
 ```
 
