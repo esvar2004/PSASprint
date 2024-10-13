@@ -1,37 +1,34 @@
 /* Predictive.css */
-html,
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0; /* Reset default margin */
-}
-
-body {
-  background: linear-gradient(-45deg, #c6f688, #ee88af, #64c1e3, #69eecf);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #fee440;
 }
 
 .predictive-container {
-  background-color: transparent; /* Light blue background */
+  position: relative;
+  min-height: 100vh;
   padding: 20px;
   text-align: center;
-  min-height: 100vh; /* Ensure the container takes full height */
-  display: flex; /* Use flexbox for centering */
-  flex-direction: column; /* Stack elements vertically */
-  justify-content: center; /* Center vertically */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+}
+
+.background-animation svg {
+  width: 100%;
+  height: 100%;
 }
 
 .predictive-cards {
@@ -43,26 +40,60 @@ body {
   position: relative;
 }
 
+.card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 300px;
+  width: 100%;
+  max-width: 1000px;
+  perspective: 1000px;
+}
+
 .card {
-  overflow: visible;
-  width: 190px;
-  height: 254px;
-  perspective: 1000px; /* For 3D effect */
+  position: absolute;
+  width: 60%;
+  height: 100%;
+  transition: all 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.card.prev {
+  transform: translateX(-50%) scale(0.8) translateZ(-100px);
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.card.next {
+  transform: translateX(50%) scale(0.8) translateZ(-100px);
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.card.current {
+  transform: translateX(0) scale(1) translateZ(0);
+  z-index: 2;
   cursor: pointer;
+}
+
+.card.animating {
+  transition: all 0.5s ease;
 }
 
 .content {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 300ms;
-  box-shadow: 0px 0px 10px 1px #000000ee;
+  transition: transform 0.5s;
+  box-shadow: 0px 0px 10px 1px #00000066;
   border-radius: 5px;
 }
 
 .front,
 .back {
-  background-color: #151515;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -72,18 +103,14 @@ body {
 }
 
 .back {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background-color: rgba(21, 21, 21, 0.8);
   transform: rotateY(180deg);
 }
 
 .back-content {
-  position: absolute;
   width: 99%;
   height: 99%;
-  background-color: #461a09;
+  background-color: rgba(70, 26, 9, 0.9);
   border-radius: 5px;
   color: white;
   display: flex;
@@ -91,11 +118,6 @@ body {
   justify-content: center;
   align-items: center;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-
-.front {
-  transform: rotateY(0deg); /* Initially show back */
-  color: white;
 }
 
 .front-content {
@@ -113,35 +135,58 @@ body {
   box-shadow: 0px 0px 10px 5px #00000088;
   width: 100%;
   padding: 10px;
-  background-color: #00000096;
+  background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   border-radius: 5px;
 }
 
 .front-content h2 {
   font-size: 14px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .back-content h2 {
   margin-bottom: 10px;
 }
 
-.flipped {
-  transform: rotateY(180deg); /* Rotate when flipped */
+.card.current.flipped .content {
+  transform: rotateY(180deg);
 }
 
-.card-enter {
-  transform: translateX(100%); /* Start off-screen to the right */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 3;
 }
 
-.card-enter-active {
-  transform: translateX(0); /* Slide in */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.card-exit {
-  transform: translateX(0); /* Start from the current position */
+.details-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
 }
 
-.card-exit-active {
-  transform: translateX(-100%); /* Slide out to the left */
+.divider {
+  width: 80%;
+  border: 1px solid #ffffff50;
+  margin: 10px 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 5px 0;
+}
+
+.detail-row span {
+  font-weight: bold;
+}
+
+.detail-row strong {
+  text-align: right;
 }
